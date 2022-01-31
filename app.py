@@ -25,6 +25,7 @@ fig.update_layout(showlegend=False)
 fig.update_yaxes(type='category')
 
 app = dash.Dash(__name__)
+server=app.server
 
 layout = dict(
     autosize=True,
