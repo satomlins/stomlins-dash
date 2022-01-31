@@ -1,0 +1,32 @@
+Brotli @ file:///Users/runner/miniforge3/conda-bld/brotli-split_1635846045218/work
+brotlipy @ file:///Users/runner/miniforge3/conda-bld/brotlipy_1636012316675/work
+certifi==2021.10.8
+cffi @ file:///Users/runner/miniforge3/conda-bld/cffi_1636046174303/work
+charset-normalizer @ file:///home/conda/feedstock_root/build_artifacts/charset-normalizer_1641584610847/work
+click @ file:///Users/runner/miniforge3/conda-bld/click_1635822706141/work
+cryptography @ file:///Users/runner/miniforge3/conda-bld/cryptography_1639699346154/work
+dash @ file:///home/conda/feedstock_root/build_artifacts/dash_1632235402030/work
+dash-bootstrap-components @ file:///home/conda/feedstock_root/build_artifacts/dash-bootstrap-components_1639337350705/work
+dash-core-components @ file:///home/conda/feedstock_root/build_artifacts/dash-core-components_1632311995097/work
+dash-html-components @ file:///home/conda/feedstock_root/build_artifacts/dash-html-components_1632395620759/work
+dataclasses @ file:///home/conda/feedstock_root/build_artifacts/dataclasses_1628958434797/work
+Flask @ file:///home/conda/feedstock_root/build_artifacts/flask_1633384704162/work
+Flask-Compress @ file:///home/conda/feedstock_root/build_artifacts/flask-compress_1623842138238/work
+gunicorn @ file:///Users/runner/miniforge3/conda-bld/gunicorn_1635854145083/work
+idna @ file:///home/conda/feedstock_root/build_artifacts/idna_1642433548627/work
+itsdangerous @ file:///home/conda/feedstock_root/build_artifacts/itsdangerous_1621360792037/work
+Jinja2 @ file:///home/conda/feedstock_root/build_artifacts/jinja2_1636510082894/work
+MarkupSafe @ file:///Users/runner/miniforge3/conda-bld/markupsafe_1635833685495/work
+numpy @ file:///Users/runner/miniforge3/conda-bld/numpy_1643009430427/work
+pandas==1.4.0
+plotly @ file:///Users/nicolas/opt/miniconda3/envs/env/conda-bld/plotly_1640057722145/work/packages/python/plotly/dist/plotly-5.5.0.tar.gz
+pycparser @ file:///home/conda/feedstock_root/build_artifacts/pycparser_1636257122734/work
+pyOpenSSL @ file:///home/conda/feedstock_root/build_artifacts/pyopenssl_1643496850550/work
+PySocks @ file:///Users/runner/miniforge3/conda-bld/pysocks_1635862775936/work
+python-dateutil @ file:///home/conda/feedstock_root/build_artifacts/python-dateutil_1626286286081/work
+pytz @ file:///home/conda/feedstock_root/build_artifacts/pytz_1633452062248/work
+requests @ file:///home/conda/feedstock_root/build_artifacts/requests_1641580202195/work
+six @ file:///home/conda/feedstock_root/build_artifacts/six_1620240208055/work
+tenacity @ file:///home/conda/feedstock_root/build_artifacts/tenacity_1626090218611/work
+urllib3 @ file:///home/conda/feedstock_root/build_artifacts/urllib3_1641584929973/work
+Werkzeug @ file:///home/conda/feedstock_root/build_artifacts/werkzeug_1642714909499/work
