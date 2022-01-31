@@ -266,4 +266,4 @@ def make_main_figure(hoverData):
 # Main
 if __name__ == '__main__':
     # app.server.run(debug=True)
-    app.run_server(debug=True, port=8069)
+    app.run_server() #debug=True, port=8069)
