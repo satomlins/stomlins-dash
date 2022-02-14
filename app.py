@@ -5,9 +5,15 @@ from dash import dcc, html
 from dash.dependencies import Input, Output
 import plotly.express as px
 
+today = pd.today = pd.Timestamp.now()
+bd = pd.Timestamp('00:00:00 2000-04-08')
+agey = today.year - bd.year - ((today.month, today.day) < (bd.month, bd.day))
+aged = (today - pd.Timedelta('{}y'.format(agey)) - bd).days
+
 df = pd.read_csv('assets/timeline.csv', parse_dates=['start', 'end'], dayfirst=True)
 df['end'] = df['end'].apply(
     lambda x: x if (x > pd.Timestamp('00:00:00 2000-01-01')) & (x < pd.Timestamp.now()) else pd.Timestamp.now())
+prevClickData = {}
 
 fig = px.timeline(df, x_start="start",
                   x_end="end",
@@ -25,7 +31,7 @@ fig.update_layout(showlegend=False)
 fig.update_yaxes(type='category')
 
 app = dash.Dash(__name__)
-server=app.server
+server = app.server
 
 layout = dict(
     autosize=True,
@@ -134,21 +140,29 @@ app.layout = html.Div(
                             [
                                 html.Div(
                                     [
-                                        html.P("I can put some info in here")
+                                        html.H5("{}".format(agey)),
+                                        html.Div([html.H6("years, ")],
+                                                 style={'margin-left': '.5rem', 'margin-right': '.5rem'}),
+                                        html.H5("{}".format(aged)),
+                                        html.Div([html.H6("days old")],
+                                                 style={'margin-left': '.5rem', 'margin-right': '.5rem'}),
+
                                     ],
+                                    style={"align-items": "center",
+                                           "justify-content": "center"},
                                     id="box1",
-                                    className="pretty_container four columns"
+                                    className="pretty_container four columns row"
                                 ),
                                 html.Div(
                                     [
-                                        html.P("I can put some info in here")
+                                        html.P("I can put some info in here 2")
                                     ],
                                     id="box2",
                                     className="pretty_container four columns"
                                 ),
                                 html.Div(
                                     [
-                                        html.P("I can put some info in here")
+                                        html.P("I can put some info in here 3")
                                     ],
                                     id="box3",
                                     className="pretty_container four columns"
@@ -195,7 +209,23 @@ app.layout = html.Div(
                             className="info_text"
                         ),
                         html.Div(
-                            id="bullets",
+                            id="bullet1",
+                            className="info_text"
+                        ),
+                        html.Div(
+                            id="bullet2",
+                            className="info_text"
+                        ),
+                        html.Div(
+                            id="bullet3",
+                            className="info_text"
+                        ),
+                        html.Div(
+                            id="bullet4",
+                            className="info_text"
+                        ),
+                        html.Div(
+                            id="bullet5",
                             className="info_text"
                         ),
 
@@ -237,21 +267,33 @@ def prettify_row(row):
 
 @app.callback(Output('title', 'children'),
               Output('info', 'children'),
-              Output('bullets', 'children'),
-              [Input('main_graph', 'hoverData')])
+              Output('bullet1', 'children'),
+              Output('bullet2', 'children'),
+              Output('bullet3', 'children'),
+              Output('bullet4', 'children'),
+              Output('bullet5', 'children'),
+              [Input('main_graph', 'hoverData'),
+               Input('main_graph', 'clickData')])
 # [Input('well_statuses', 'value'),
 #  Input('well_types', 'value'),
 #  Input('year_slider', 'value')],
 # [State('lock_selector', 'values'),
 #  State('main_graph', 'relayoutData')])
-def make_main_figure(hoverData):
+def make_main_figure(hoverData, clickData):
     global df
+    global prevClickData
+
+    print('click', clickData)
+    print('hover', hoverData)
+
+    if clickData == prevClickData:
+        newData = hoverData
+    else:
+        newData = clickData
 
     x = hoverData['points'][0]['x']
     x2 = hoverData['points'][0]['base']
     y = hoverData['points'][0]['y']
-
-    print(hoverData)
 
     row = df[(df['start'] <= x)
              & (df['end'] >= x)
@@ -259,12 +301,14 @@ def make_main_figure(hoverData):
              & (df['end'] >= x2)
              & (df['type'] == y)]
 
-    print(row)
+    prevClickData = clickData
+    # prevHoverData = hoverData
 
-    return row['title'], row['info'], row['bullet_1']
+    return row['title'], row['info'], '• ' + row['bullet_1'], '• ' + row['bullet_2'], '• ' + row['bullet_3'], '• ' + \
+           row['bullet_4'], '• ' + row['bullet_5']
 
 
 # Main
 if __name__ == '__main__':
     # app.server.run(debug=True)
-    app.run_server() #debug=True, port=8069)
+    app.run_server()  # debug=True, port=8069)
