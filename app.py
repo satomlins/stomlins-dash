@@ -3,8 +3,11 @@ import pandas as pd
 import dash
 from dash import dcc, html
 from dash.dependencies import Input, Output
+from dash_iconify import DashIconify
 import plotly.express as px
 
+icon_size = 20
+icon_style = {'margin': '0.1rem 0.4rem 0'}
 today = pd.today = pd.Timestamp.now()
 bd = pd.Timestamp('00:00:00 2000-04-08')
 agey = today.year - bd.year - ((today.month, today.day) < (bd.month, bd.day))
@@ -28,7 +31,8 @@ fig = px.timeline(df,
                   y="type",
                   color='title',
                   template='plotly_dark',
-                  labels={'type': ''}
+                  labels={'type': ''},
+                  height=300,
                   )
 
 fig.update_traces(
@@ -44,32 +48,6 @@ app = dash.Dash(__name__,
 app.title = 'stomlins'
 
 server = app.server
-
-
-# layout = dict(
-#     autosize=True,
-#     automargin=True,
-#     margin=dict(
-#         l=30,
-#         r=30,
-#         b=20,
-#         t=40
-#     ),
-#     hovermode="closest",
-#     plot_bgcolor="#F9F9F9",
-#     paper_bgcolor="#F9F9F9",
-#     legend=dict(font=dict(size=10), orientation='h'),
-#     title='Satellite Overview',
-#     mapbox=dict(
-#         # accesstoken=mapbox_access_token,
-#         style="light",
-#         center=dict(
-#             lon=-78.05,
-#             lat=42.54
-#         ),
-#         zoom=7,
-#     )
-# )
 
 # Create app layout
 app.layout = html.Div([
@@ -92,6 +70,7 @@ app.layout = html.Div([
                                 },
                             )
                         ],
+                        style={'margin': '2em 0 0 0'},
                         className='twelve columns'
                     ),
                 ],
@@ -111,9 +90,10 @@ app.layout = html.Div([
                     html.Div([
                         html.P(
                             about_me,
-                            style={'font-size': '1.4em',
+                            style={'font-size': '1.2em',
                                    'text-align': 'justify',
                                    'text-justify': 'inter-word',
+                                   'padding': '0 2em',
                                    'top': '50%',
                                    'margin': 0,
                                    'position': 'absolute',
@@ -172,8 +152,36 @@ app.layout = html.Div([
         },
         className='main_container'
     ),
-    html.Div([html.P('© {} Scott Tomlins   |   website by Scott Tomlins'.format(pd.Timestamp.now().year))],
-             className='footer')
+    html.Div([
+        html.Div([
+            DashIconify(
+                icon="bi:envelope",
+                width=icon_size,
+                height=icon_size,
+                style=icon_style
+            ),
+            DashIconify(
+                icon="bi:linkedin",
+                width=icon_size,
+                height=icon_size,
+                style=icon_style
+            ),
+            DashIconify(
+                icon="bi:medium",
+                width=icon_size,
+                height=icon_size,
+                style=icon_style
+            ),
+            DashIconify(
+                icon="bi:github",
+                width=icon_size,
+                height=icon_size,
+                style=icon_style
+            ),
+        ]),
+        html.P('© {} Scott Tomlins   |   website by Scott Tomlins'.format(pd.Timestamp.now().year)),
+    ],
+        className='footer')
 ]
 )
 
