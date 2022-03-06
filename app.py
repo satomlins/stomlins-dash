@@ -32,7 +32,7 @@ fig = px.timeline(df,
                   color='title',
                   template='plotly_dark',
                   labels={'type': ''},
-                  height=300,
+                  height=400,
                   )
 
 fig.update_traces(
@@ -198,6 +198,7 @@ def prettify_row(row):
 def make_main_figure(hoverData, clickData):
     global df
     global prevClickData
+    global newData
 
     print('click', clickData)
     print('hover', hoverData)
