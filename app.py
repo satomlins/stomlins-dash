@@ -10,27 +10,36 @@ bd = pd.Timestamp('00:00:00 2000-04-08')
 agey = today.year - bd.year - ((today.month, today.day) < (bd.month, bd.day))
 aged = (today - pd.Timedelta('{}y'.format(agey)) - bd).days
 
+about_me = "Hi, I'm Scott, age {} years and {} days! This is my website." \
+           " Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et" \
+           " dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip" \
+           " ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu" \
+           " fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt" \
+           " mollit anim id est laborum.".format(agey, aged)
+
 df = pd.read_csv('assets/timeline.csv', parse_dates=['start', 'end'], dayfirst=True)
 df['end'] = df['end'].apply(
     lambda x: x if (x > pd.Timestamp('00:00:00 2000-01-01')) & (x < pd.Timestamp.now()) else pd.Timestamp.now())
 prevClickData = {}
 
-fig = px.timeline(df, x_start="start",
+fig = px.timeline(df,
+                  x_start="start",
                   x_end="end",
                   y="type",
                   color='title',
+                  template='plotly_dark',
+                  labels={'type': ''}
                   )
 
 fig.update_traces(
     hovertemplate='%{y}',
-    # hoverinfo = 'skip'
 )
 
-fig.update_layout(showlegend=False)
+fig.update_layout(showlegend=False,
+                  yaxis={'type': 'category', 'visible': True})
 
-fig.update_yaxes(type='category')
-
-app = dash.Dash(__name__)
+app = dash.Dash(__name__,
+                meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1"}], )
 server = app.server
 
 layout = dict(
@@ -59,205 +68,109 @@ layout = dict(
 )
 
 # Create app layout
-app.layout = html.Div(
-    [
-        html.Div(
-            [
-                html.Img(
-                    src="assets/PP_circ.png",
-                    className='two columns',
-                ),
-                html.Div(
-                    [
-                        html.H1(
-                            'Scott Tomlins',
+app.layout = html.Div([
+    html.Div(
+        [
+            html.Div(
+                [
+                    html.Div(
+                        [
+                            html.H1(
+                                'Scott Tomlins',
+                                style={
+                                    "textAlign": "center",
+                                },
+                            ),
+                            html.H3(
+                                'Data Scientist - Bristol, UK',
+                                style={
+                                    "textAlign": "center",
+                                },
+                            )
+                        ],
+                        className='twelve columns'
+                    ),
+                ],
+                id="header",
+                className='row',
+            ),
 
+            html.Div(
+                [
+                    html.Div([
+                        html.Img(
+                            src="assets/PP_circ.png",
+                            className='twelve columns'
                         ),
-                        html.H3(
-                            'Data Scientist - Bristol, UK',
+                    ], className='three columns pretty_container',
+                    ),
+                    html.Div([
+                        html.P(
+                            about_me,
+                            style={'font-size': '1.4em',
+                                   'text-align': 'justify',
+                                   'text-justify': 'inter-word',
+                                   'top': '50%',
+                                   'margin': 0,
+                                   'position': 'absolute',
+                                   'transform': 'translate(0, -50%)'
+                                   }
                         )
-                    ],
+                    ], className='nine columns pretty_container',
+                    )
+                ],
+                id="main_text",
+                className="pretty_container row"
 
-                    className='ten columns'
-                ),
-
-            ],
-            id="header",
-            className='row',
-        ),
-        html.Div(
-            [
-                html.Div(
-                    [
-                        html.P(
-                            'Filter by construction date (or select range in histogram):',
-                            className="control_label"
-                        ),
-                        dcc.RangeSlider(
-                            id='year_slider',
-                            min=1960,
-                            max=2017,
-                            value=[1990, 2010],
-                            className="dcc_control"
-                        ),
-                        html.P(
-                            'Filter by well status:',
-                            className="control_label"
-                        ),
-                        dcc.RadioItems(
-                            id='well_status_selector',
-                            options=[
-                                {'label': 'All ', 'value': 'all'},
-                                {'label': 'Active only ', 'value': 'active'},
-                                {'label': 'Customize ', 'value': 'custom'}
-                            ],
-                            value='active',
-                            labelStyle={'display': 'inline-block'},
-                            className="dcc_control"
-                        ),
-                        html.P(
-                            'Filter by well type:',
-                            className="control_label"
-                        ),
-                        dcc.RadioItems(
-                            id='well_type_selector',
-                            options=[
-                                {'label': 'All ', 'value': 'all'},
-                                {'label': 'Productive only ',
-                                 'value': 'productive'},
-                                {'label': 'Customize ', 'value': 'custom'}
-                            ],
-                            value='productive',
-                            labelStyle={'display': 'inline-block'},
-                            className="dcc_control"
-                        ),
-                    ],
-                    className="pretty_container four columns"
-                ),
-                html.Div(
-                    [
-                        html.Div(
-                            [
-                                html.Div(
-                                    [
-                                        html.H5("{}".format(agey)),
-                                        html.Div([html.H6("years, ")],
-                                                 style={'margin-left': '.5rem', 'margin-right': '.5rem'}),
-                                        html.H5("{}".format(aged)),
-                                        html.Div([html.H6("days old")],
-                                                 style={'margin-left': '.5rem', 'margin-right': '.5rem'}),
-
-                                    ],
-                                    style={"align-items": "center",
-                                           "justify-content": "center"},
-                                    id="box1",
-                                    className="pretty_container four columns row"
-                                ),
-                                html.Div(
-                                    [
-                                        html.P("I can put some info in here 2")
-                                    ],
-                                    id="box2",
-                                    className="pretty_container four columns"
-                                ),
-                                html.Div(
-                                    [
-                                        html.P("I can put some info in here 3")
-                                    ],
-                                    id="box3",
-                                    className="pretty_container four columns"
-                                ),
-
-                            ],
-                            id="infoContainer",
-                            className="row"
-                        ),
-                        html.Div(
-                            [
-                                dcc.Graph(
-                                    id='count_graph',
-                                )
-                            ],
-                            id="countGraphContainer",
-                            className="pretty_container"
-                        )
-                    ],
-                    id="rightCol",
-                    className="eight columns"
-                )
-            ],
-            className="row"
-        ),
-        html.Div(
-            [
-                html.Div(
-                    [
-                        dcc.Graph(id='main_graph',
-                                  figure=fig,
-                                  )
-                    ],
-                    className='pretty_container eight columns',
-                ),
-                html.Div(
-                    [
-                        html.H5(
-                            id="title",
-                            className="info_text"
-                        ),
-                        html.H6(
-                            id="info",
-                            className="info_text"
-                        ),
-                        html.Div(
-                            id="bullet1",
-                            className="info_text"
-                        ),
-                        html.Div(
-                            id="bullet2",
-                            className="info_text"
-                        ),
-                        html.Div(
-                            id="bullet3",
-                            className="info_text"
-                        ),
-                        html.Div(
-                            id="bullet4",
-                            className="info_text"
-                        ),
-                        html.Div(
-                            id="bullet5",
-                            className="info_text"
-                        ),
-
-                    ],
-                    className='pretty_container four columns',
-                ),
-            ],
-            className='row'
-        ),
-        html.Div(
-            [
-                html.Div(
-                    [
-                        dcc.Graph(id='pie_graph')
-                    ],
-                    className='pretty_container eight columns',
-                ),
-                html.Div(
-                    [
-                        dcc.Graph(id='aggregate_graph')
-                    ],
-                    className='pretty_container four columns',
-                ),
-            ],
-            className='row'
-        ),
-    ],
-    id="mainContainer",
-    style={
-        "display": "flex",
-        "flex-direction": "column"
-    }
+            ),
+            html.Div(
+                [
+                    html.Div(
+                        [
+                            dcc.Graph(id='main_graph',
+                                      figure=fig,
+                                      )
+                        ],
+                        className='pretty_container eight columns',
+                    ),
+                    html.Div(
+                        [
+                            html.H5(
+                                id="title",
+                                className="info_text"
+                            ),
+                            html.H6(
+                                'Hover over the timeline for information',
+                                id="info",
+                                className="info_text"
+                            ),
+                            html.Div(
+                                [
+                                    html.Ul(id="bullets",
+                                            style={'list-style-position': 'outside',
+                                                   'list-style-type': 'disc',
+                                                   'margin': '1em'}
+                                            )
+                                ],
+                                className="info_text"
+                            ),
+                        ],
+                        className='pretty_container four columns',
+                    ),
+                ],
+                className='row'
+            ),
+        ],
+        id="mainContainer",
+        style={
+            "display": "flex",
+            "flex-direction": "column"
+        },
+        className='main_container'
+    ),
+    html.Div([html.P('© {} Scott Tomlins   |   website by Scott Tomlins'.format(pd.Timestamp.now().year))],
+             className='footer')
+]
 )
 
 
@@ -267,18 +180,9 @@ def prettify_row(row):
 
 @app.callback(Output('title', 'children'),
               Output('info', 'children'),
-              Output('bullet1', 'children'),
-              Output('bullet2', 'children'),
-              Output('bullet3', 'children'),
-              Output('bullet4', 'children'),
-              Output('bullet5', 'children'),
+              Output('bullets', 'children'),
               [Input('main_graph', 'hoverData'),
                Input('main_graph', 'clickData')])
-# [Input('well_statuses', 'value'),
-#  Input('well_types', 'value'),
-#  Input('year_slider', 'value')],
-# [State('lock_selector', 'values'),
-#  State('main_graph', 'relayoutData')])
 def make_main_figure(hoverData, clickData):
     global df
     global prevClickData
@@ -304,8 +208,13 @@ def make_main_figure(hoverData, clickData):
     prevClickData = clickData
     # prevHoverData = hoverData
 
-    return row['title'], row['info'], '• ' + row['bullet_1'], '• ' + row['bullet_2'], '• ' + row['bullet_3'], '• ' + \
-           row['bullet_4'], '• ' + row['bullet_5']
+    return row['title'], \
+           row['info'], \
+           [html.Li(i) for i in (row['bullet_1'],
+                                 row['bullet_2'],
+                                 row['bullet_3'],
+                                 row['bullet_4'],
+                                 row['bullet_5']) if i.any()]
 
 
 # Main
