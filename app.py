@@ -40,7 +40,7 @@ fig.update_traces(
 )
 
 fig.update_layout(showlegend=False,
-                  yaxis={'type': 'category', 'visible': True})
+                  yaxis={'type': 'category', 'visible': True, 'tickangle': -45},)
 
 app = dash.Dash(__name__,
                 meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1"}], )
@@ -62,12 +62,14 @@ app.layout = html.Div([
                                 style={
                                     "textAlign": "center",
                                 },
+                                className='pretty_container'
                             ),
                             html.H3(
                                 'Data Scientist - Bristol, UK',
                                 style={
                                     "textAlign": "center",
                                 },
+                                className='pretty_container'
                             )
                         ],
                         style={'margin': '2em 0 0 0'},
@@ -83,7 +85,7 @@ app.layout = html.Div([
                     html.Div([
                         html.Img(
                             src="assets/PP_circ.png",
-                            className='twelve columns'
+                            className='twelve columns img'
                         ),
                     ], className='three columns pretty_container',
                     ),
@@ -98,7 +100,8 @@ app.layout = html.Div([
                                    'margin': 0,
                                    'position': 'absolute',
                                    'transform': 'translate(0, -50%)'
-                                   }
+                                   },
+                            className='container',
                         )
                     ], className='nine columns pretty_container',
                     )
@@ -154,29 +157,45 @@ app.layout = html.Div([
     ),
     html.Div([
         html.Div([
-            DashIconify(
-                icon="bi:envelope",
-                width=icon_size,
-                height=icon_size,
-                style=icon_style
+            dcc.Link(
+                DashIconify(
+                    icon="bi:envelope",
+                    width=icon_size,
+                    height=icon_size,
+                    style=icon_style
+                ),
+                target='_blank',
+                href='mailto:scott@stomlins.com',
             ),
-            DashIconify(
-                icon="bi:linkedin",
-                width=icon_size,
-                height=icon_size,
-                style=icon_style
+            dcc.Link(
+                DashIconify(
+                    icon="bi:linkedin",
+                    width=icon_size,
+                    height=icon_size,
+                    style=icon_style
+                ),
+                target='_blank',
+                href='https://www.linkedin.com/in/scotttomlins/',
             ),
-            DashIconify(
-                icon="bi:medium",
-                width=icon_size,
-                height=icon_size,
-                style=icon_style
+            dcc.Link(
+                DashIconify(
+                    icon="bi:medium",
+                    width=icon_size,
+                    height=icon_size,
+                    style=icon_style
+                ),
+                target='_blank',
+                href='https://stomlins.medium.com/',
             ),
-            DashIconify(
-                icon="bi:github",
-                width=icon_size,
-                height=icon_size,
-                style=icon_style
+            dcc.Link(
+                DashIconify(
+                    icon="bi:github",
+                    width=icon_size,
+                    height=icon_size,
+                    style=icon_style
+                ),
+                target='_blank',
+                href='https://github.com/satomlins/',
             ),
         ]),
         html.P('© {} Scott Tomlins   |   website by Scott Tomlins'.format(pd.Timestamp.now().year)),
@@ -208,9 +227,13 @@ def make_main_figure(hoverData, clickData):
     else:
         newData = clickData
 
-    x = hoverData['points'][0]['x']
-    x2 = hoverData['points'][0]['base']
-    y = hoverData['points'][0]['y']
+    print('\n')
+    print('new ', newData)
+    print('\n')
+
+    x = newData['points'][0]['x']
+    x2 = newData['points'][0]['base']
+    y = newData['points'][0]['y']
 
     row = df[(df['start'] <= x)
              & (df['end'] >= x)
