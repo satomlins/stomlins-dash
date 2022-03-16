@@ -64,6 +64,7 @@ app.layout = html.Div([
                                 'Scott Tomlins',
                                 style={
                                     "textAlign": "center",
+                                    'margin': '0 0 0 0',
                                 },
                                 className='pretty_container'
                             ),
@@ -71,11 +72,12 @@ app.layout = html.Div([
                                 'Data Scientist - Bristol, UK',
                                 style={
                                     "textAlign": "center",
+                                    'margin': '0 0 0 0',
                                 },
-                                className='pretty_container'
+                                className='pretty_container',
                             )
                         ],
-                        style={'margin': '2em 0 0 0'},
+                        style={'margin': '2em 0 0'},
                         className='twelve columns'
                     ),
                 ],
@@ -104,11 +106,12 @@ app.layout = html.Div([
                             className='twelve columns',
                         )
                     ],
-                        className='eight columns pretty_container offset-by-half column'
+                        className='eightplus columns pretty_container offset-by-half column',
                     )
                 ],
                 id="main_text",
-                className="row"
+                className="row",
+                style={'margin': '2em 0'},
             ),
             html.Div(
                 [
@@ -239,7 +242,6 @@ def update_info(hoverData, clickData):
 
     prevClickData = clickData
     # prevHoverData = hoverData
-
 
     print(row['info'])
     print(row['info'].values[0])
