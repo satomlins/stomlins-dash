@@ -18,7 +18,8 @@ about_me = "Hi, I'm Scott, age {} years and {} days! This is my website." \
            " dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip" \
            " ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu" \
            " fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt" \
-           " mollit anim id est laborum.".format(agey, aged)
+           " mollit anim id est laborum." \
+    .format(agey, aged)
 
 df = pd.read_csv('assets/timeline.csv', parse_dates=['start', 'end'], dayfirst=True)
 df['end'] = df['end'].apply(
@@ -40,7 +41,7 @@ fig.update_traces(
 )
 
 fig.update_layout(showlegend=False,
-                  yaxis={'type': 'category', 'visible': True, 'tickangle': -45},)
+                  yaxis={'type': 'category', 'visible': True, 'tickangle': -45}, )
 
 app = dash.Dash(__name__,
                 meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1"}], )
@@ -87,7 +88,7 @@ app.layout = html.Div([
                             src="assets/PP_circ.png",
                             className='twelve columns img'
                         ),
-                    ], className='three columns pretty_container',
+                    ], className='three columns',
                     ),
                     html.Div([
                         html.P(
@@ -95,20 +96,17 @@ app.layout = html.Div([
                             style={'font-size': '1.2em',
                                    'text-align': 'justify',
                                    'text-justify': 'inter-word',
-                                   'padding': '0 2em',
                                    'top': '50%',
-                                   'margin': 0,
-                                   'position': 'absolute',
-                                   'transform': 'translate(0, -50%)'
+                                   'margin': '0 0 0 0',
                                    },
-                            className='container',
+                            className='twelve columns',
                         )
-                    ], className='nine columns pretty_container',
+                    ],
+                        className='eight columns pretty_container offset-by-half column'
                     )
                 ],
                 id="main_text",
-                className="pretty_container row"
-
+                className="row"
             ),
             html.Div(
                 [
