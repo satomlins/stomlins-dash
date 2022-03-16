@@ -297,7 +297,6 @@ body {
     /*body {*/
     /*    font-size: 1em; !* currently ems cause chrome bug misinterpreting rems on body element *!*/
     /*}*/
-
     .row {
         flex-direction: column;
     }
@@ -320,7 +319,7 @@ body {
 
 /* Typography
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h2, h4, h5, h6 {
     margin-top: 0;
     margin-bottom: 0;
     font-weight: 300;
@@ -333,15 +332,8 @@ h1 {
     margin-bottom: 2rem;
 }
 
-h2 {
-    font-size: 3.0em;
-    line-height: 1.25;
-    letter-spacing: -.1rem;
-    margin-bottom: 0px;
-    margin-top: 1rem;
-}
 
-h3 {
+h2 {
     font-size: 2.6em;
     line-height: 1.3;
     letter-spacing: -.1rem;
@@ -349,14 +341,6 @@ h3 {
     margin-top: 1.5rem;
 }
 
-h4 {
-    font-size: 2.2em;
-    line-height: 1.35;
-    letter-spacing: -.08rem;
-    margin-bottom: 1.2rem;
-    margin-top: 0px;
-    margin-left: 1rem
-}
 
 h5 {
     font-size: 1.2em;
@@ -395,12 +379,27 @@ blockquote {
 
 /* Links
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
-/*a {*/
-/*    color: #1EAEDB;*/
-/*}*/
+a {
+    color: white
+}
+
+/* Globally */
+
+/* Each state */
+
+a:visited {
+    text-decoration: none;
+    color: white;
+}
 
 a:hover {
-    color: #bbbbbb;
+    text-decoration: none;
+    color: #8899A6;
+}
+
+a:hover, a:active {
+    text-decoration: none;
+    color: #8899A6
 }
 
 

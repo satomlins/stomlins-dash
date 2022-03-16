@@ -65,7 +65,7 @@ app.layout = html.Div([
                                 },
                                 className='pretty_container'
                             ),
-                            html.H3(
+                            html.H2(
                                 'Data Scientist - Bristol, UK',
                                 style={
                                     "textAlign": "center",
@@ -124,11 +124,7 @@ app.layout = html.Div([
                                 id="title",
                                 className="info_text"
                             ),
-                            html.H6(
-                                'Hover over the timeline for information',
-                                id="info",
-                                className="info_text"
-                            ),
+                            html.Div([], id='info'),
                             html.Div(
                                 [
                                     html.Ul(id="bullets",
@@ -212,7 +208,7 @@ def prettify_row(row):
               Output('bullets', 'children'),
               [Input('main_graph', 'hoverData'),
                Input('main_graph', 'clickData')])
-def make_main_figure(hoverData, clickData):
+def update_info(hoverData, clickData):
     global df
     global prevClickData
     global newData
@@ -242,8 +238,30 @@ def make_main_figure(hoverData, clickData):
     prevClickData = clickData
     # prevHoverData = hoverData
 
+
+    print(row['info'])
+    print(row['info'].values[0])
+    linkInfo = row['info'].values[0].split('|')
+
+    if len(linkInfo) == 1:
+        info = html.H6(
+            row['info'],
+            id="info",
+            className="info_text"
+        )
+    else:
+        info = dcc.Link(
+            html.H6(
+                linkInfo[0],
+                id="info",
+                className="info_text"
+            ),
+            target='_blank',
+            href=linkInfo[1],
+        ),
+
     return row['title'], \
-           row['info'], \
+           info, \
            [html.Li(i) for i in (row['bullet_1'],
                                  row['bullet_2'],
                                  row['bullet_3'],
