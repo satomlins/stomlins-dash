@@ -41,7 +41,9 @@ fig.update_traces(
 )
 
 fig.update_layout(showlegend=False,
-                  yaxis={'type': 'category', 'visible': True, 'tickangle': -45}, )
+                  yaxis={'type': 'category', 'visible': True, 'tickangle': -45},
+                  margin=dict(l=0, r=0, t=20, b=20),
+                  )
 
 app = dash.Dash(__name__,
                 meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1"}], )
