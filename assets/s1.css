@@ -46,22 +46,37 @@ body {
     font-family: "Montserrat", "Roboto Mono", "Open Sans", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
     background-color: #121212;
     color: #FFFFFF;
-    margin: 5%;
+    margin: 2%;
 }
 
-.pretty_container {
+
+.container {
     border-radius: 5px;
     border-color: #00FFFF;
     /*border-style: solid;*/
-    /*margin: 1%;*/
     padding: 1%;
     position: relative;
     display: block;
 }
 
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    border-radius: 5px;
+    border-color: #FF00FF;
+    /*border-style: solid;*/
+    justify-content: space-between;
+}
+
 .img {
     position: relative;
+    border-radius: 5%;
+}
 
+.plot {
+    position: relative;
+    border-radius: 5%;
 }
 
 .main_container {
@@ -69,8 +84,8 @@ body {
     border-color: #404040;
     border-style: solid;
     background-color: #181818;
-    margin: 0 10% 5%;
-    padding: 1% 2%;
+    margin: 3% 10% 2%;
+    padding: 1% 5%;
     position: relative;
 }
 
@@ -83,12 +98,15 @@ body {
     /*color: white;*/
     text-align: center;
     padding: 10px 10px 0;
-
 }
 
-.bare_container {
-    margin: 0 0 0 0;
-    padding: 0 0 0 0;
+hr {
+    display: block;
+    /*height: 1px;*/
+    border: 0;
+    border-top: 0 solid;
+    margin: 2em 0;
+    padding: 0;
 }
 
 .data_text {
@@ -113,16 +131,6 @@ body {
     margin-left: 0px;
     padding-left: 0px;
 }
-
-.row {
-    display: flex;
-    flex-wrap: wrap;
-    position: relative;
-    border-radius: 5px;
-    border-color: #FF00FF;
-    /*border-style: solid;*/
-}
-
 
 #individual_graph,
 #aggregate_graph {
@@ -486,16 +494,6 @@ ol {
 }
 
 
-/* Misc
-–––––––––––––––––––––––––––––––––––––––––––––––––– */
-hr {
-    margin-top: 3rem;
-    margin-bottom: 3.5rem;
-    border-width: 0;
-    border-top: 1px solid #E1E1E1;
-}
-
-
 /* Clearing
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 
@@ -508,8 +506,8 @@ hr {
 /*    clear: both;*/
 /*}*/
 
-.pretty_container:before,
-.pretty_container:after,
+.container:before,
+.container:after,
 .row:before,
 .row:after,
 .u-cf {
@@ -517,7 +515,7 @@ hr {
     display: block
 }
 
-.pretty_container:after,
+.container:after,
 .row:after {
     clearfix: both;
 }
@@ -533,15 +531,13 @@ there.
 */
 
 
-
 /* For devices larger than 550px */
 @media screen and (min-width: 900px) {
 
-    .column,
-    .columns {
-        margin-left: 0.5%;
-    }
-
+    /*.column,*/
+    /*.columns {*/
+    /*    margin-left: 0.5%;*/
+    /*}*/
     .one.column,
     .one.columns {
         width: 8%;
@@ -581,6 +577,10 @@ there.
 
     .nine.columns {
         width: 74.5%;
+    }
+
+    .nineplus.columns {
+        width: 79.0%;
     }
 
     .ten.columns {
@@ -660,14 +660,22 @@ there.
 
 }
 
+/*@media screen and (max-width: 1600px) {*/
+/*    body {*/
+/*        margin: 0;*/
+/*    }*/
+/*}*/
+
+
 @media screen and (max-width: 900px) {
     body {
-        /*font-size: 1em; !* currently ems cause chrome bug misinterpreting rems on body element *!*/
+        margin: 5% 2%;
     }
 
     h1 {
         font-size: 4em;
     }
+
     h2 {
         font-size: 2em;
     }
@@ -681,19 +689,50 @@ there.
         border-color: #404040;
         border-style: solid;
         background-color: #181818;
-        margin: 0px;
+        margin: 0 0 2em;
         padding: 2px;
         /*position: relative;*/
     }
 
     .img {
-        padding: 0 20%;
+        position: relative;
+        border-radius: 5%;
+        margin: 0 20% 5%;
+        max-width: 60%;
+        max-height: 100%;
     }
 
-    .pretty_container {
+    .plot {
         padding: 2% 5%;
     }
 
+    .container {
+        padding: 2% 5%;
+    }
+
+    hr {
+        display: block;
+        /*height: 1px;*/
+        border: 0;
+        border-top: 2px solid #ccc;
+        margin: 4em 15%;
+        padding: 0;
+    }
+}
 
 
+@media screen and (max-width: 1440px) and (min-width: 900px) {
+    body {
+        margin: 2% 0;
+    }
+
+    .main_container {
+        border-radius: 5px;
+        border-color: #404040;
+        border-style: solid;
+        background-color: #181818;
+        margin: 3% 5% 2%;
+        padding: 1% 5%;
+        position: relative;
+    }
 }

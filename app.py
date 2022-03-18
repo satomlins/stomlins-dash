@@ -24,7 +24,7 @@ about_me = "Hi, I'm Scott, age {} years and {} days! This is my website." \
 df = pd.read_csv('assets/timeline.csv', parse_dates=['start', 'end'], dayfirst=True)
 df['end'] = df['end'].apply(
     lambda x: x if (x > pd.Timestamp('00:00:00 2000-01-01')) & (x < pd.Timestamp.now()) else pd.Timestamp.now())
-prevClickData = {}
+prevClickData = None
 
 fig = px.timeline(df,
                   x_start="start",
@@ -34,6 +34,7 @@ fig = px.timeline(df,
                   template='plotly_dark',
                   labels={'type': ''},
                   height=400,
+                  title='Hover/click on the plot for more information'
                   )
 
 fig.update_traces(
@@ -42,7 +43,8 @@ fig.update_traces(
 
 fig.update_layout(showlegend=False,
                   yaxis={'type': 'category', 'visible': True, 'tickangle': -45},
-                  margin=dict(l=0, r=0, t=20, b=20),
+                  margin=dict(l=0, r=0, t=80, b=40),
+                  font_family='Montserrat'
                   )
 
 app = dash.Dash(__name__,
@@ -66,7 +68,7 @@ app.layout = html.Div([
                                     "textAlign": "center",
                                     'margin': '0 0 0 0',
                                 },
-                                className='pretty_container'
+                                className='container'
                             ),
                             html.H2(
                                 'Data Scientist - Bristol, UK',
@@ -74,7 +76,7 @@ app.layout = html.Div([
                                     "textAlign": "center",
                                     'margin': '0 0 0 0',
                                 },
-                                className='pretty_container',
+                                className='container',
                             )
                         ],
                         style={'margin': '2em 0 0'},
@@ -89,10 +91,10 @@ app.layout = html.Div([
                 [
                     html.Div([
                         html.Img(
-                            src="assets/PP_circ.png",
+                            src="assets/PP.jpeg",
                             className='twelve columns img'
                         ),
-                    ], className='three columns',
+                    ], className='two columns',
                     ),
                     html.Div([
                         html.P(
@@ -106,13 +108,14 @@ app.layout = html.Div([
                             className='twelve columns',
                         )
                     ],
-                        className='eightplus columns pretty_container offset-by-half column',
+                        className='nineplus columns container offset-by-half column',
                     )
                 ],
                 id="main_text",
                 className="row",
-                style={'margin': '2em 0'},
+                style={'margin': '2em 0 0'},
             ),
+            html.Hr(),
             html.Div(
                 [
                     html.Div(
@@ -121,7 +124,7 @@ app.layout = html.Div([
                                       figure=fig,
                                       )
                         ],
-                        className='pretty_container eight columns',
+                        className='plot eight columns',
                     ),
                     html.Div(
                         [
@@ -129,7 +132,10 @@ app.layout = html.Div([
                                 id="title",
                                 className="info_text"
                             ),
-                            html.Div([], id='info'),
+                            html.Div(html.H6(
+                                'Hover/click on the plot for more information',
+                                className="info_text"
+                            ), id='info'),
                             html.Div(
                                 [
                                     html.Ul(id="bullets",
@@ -141,7 +147,7 @@ app.layout = html.Div([
                                 className="info_text"
                             ),
                         ],
-                        className='pretty_container four columns',
+                        className='container four columns',
                     ),
                 ],
                 className='row'
@@ -244,25 +250,27 @@ def update_info(hoverData, clickData):
     # prevHoverData = hoverData
 
     print(row['info'])
-    print(row['info'].values[0])
+    print(row['info'].values[0].split('|'))
     linkInfo = row['info'].values[0].split('|')
+
+    print(linkInfo)
 
     if len(linkInfo) == 1:
         info = html.H6(
             row['info'],
-            id="info",
             className="info_text"
         )
     else:
         info = dcc.Link(
             html.H6(
                 linkInfo[0],
-                id="info",
                 className="info_text"
             ),
             target='_blank',
             href=linkInfo[1],
         ),
+
+    print(info)
 
     return row['title'], \
            info, \
