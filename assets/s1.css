@@ -681,20 +681,20 @@ there.
         margin: 5% 2%;
     }
 
-    h1, h2, h2, h4, h5, h6 {
-        margin-top: 0;
-        margin-bottom: 0;
-        font-weight: 300;
-    }
+    /*h1, h2, h2, h4, h5, h6 {*/
+    /*    margin-top: 0;*/
+    /*    margin-bottom: 0;*/
+    /*    font-weight: 300;*/
+    /*}*/
 
-    h1 {
-        /*font-size: 4em;*/
-        font-size: 10vw;
-    }
+    /*h1 {*/
+    /*    !*font-size: 4em;*!*/
+    /*    font-size: 12vw;*/
+    /*}*/
 
-    h2 {
-        font-size: 4.2vw;
-    }
+    /*h2 {*/
+    /*    font-size: 5vw;*/
+    /*}*/
 
     .row {
         flex-direction: column;
@@ -739,18 +739,14 @@ there.
 }
 
 
-/*@media screen and (max-width: 1440px) and (min-width: 900px) {*/
-/*    body {*/
-/*        margin: 2% 0;*/
-/*    }*/
+@media screen and (max-width: 700px){
 
-/*    .main_container {*/
-/*        border-radius: 5px;*/
-/*        border-color: #404040;*/
-/*        border-style: solid;*/
-/*        background-color: #181818;*/
-/*        margin: 3% 5% 2%;*/
-/*        padding: 1% 5%;*/
-/*        position: relative;*/
-/*    }*/
-/*}*/
+    h1 {
+        /*font-size: 4em;*/
+        font-size: 12vw;
+    }
+
+    h2 {
+        font-size: 5vw;
+    }
+}
