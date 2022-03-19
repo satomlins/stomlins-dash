@@ -45,7 +45,7 @@ fig.update_traces(
 fig.update_layout(showlegend=False,
                   yaxis={'type': 'category', 'visible': True, 'tickangle': -45},
                   margin=dict(l=0, r=0, t=80, b=40),
-                  font_family='Montserrat'
+                  font_family='Montserrat, Roboto Mono'
                   )
 
 app = dash.Dash(__name__,
@@ -68,11 +68,12 @@ app.layout = html.Div([
                                 style={
                                     "textAlign": "center",
                                     'margin': '0 0 0 0',
+                                    'color': '#00FFFF',
                                 },
                                 className='container'
                             ),
                             html.H2(
-                                'Data Scientist - Bristol, UK',
+                                'Data Scientist - Bristol UK',
                                 style={
                                     "textAlign": "center",
                                     'margin': '0 0 0 0',
@@ -96,7 +97,9 @@ app.layout = html.Div([
                             className='twelve columns img',
                             # style={'height': '20em', 'width': 'auto'}
                         ),
-                    ], className='two columns',
+                    ], className='container img_container',  # , className='two columns',
+                        # style={'display': 'inline-block', 'border-style': 'solid', 'position': 'static',
+                        #        'max-height': '100%', 'float': 'left'}
                     ),
                     html.Div([
                         html.P(
@@ -110,7 +113,10 @@ app.layout = html.Div([
                             className='twelve columns',
                         )
                     ],
-                        className='nineplus columns container offset-by-half column',
+                        className='container offset-by-half column',
+                        style={'flex': '1'},
+                        # style={'display': 'inline-block', 'border-style': 'solid'}
+                        # className='nineplus columns container offset-by-half column',
                     )
                 ],
                 id="main_text",
@@ -154,14 +160,10 @@ app.layout = html.Div([
                         className='container four columns',
                     ),
                 ],
-                className='row'
+                className='row',
             ),
         ],
         id="mainContainer",
-        style={
-            "display": "flex",
-            "flex-direction": "column"
-        },
         className='main_container'
     ),
     html.Div([
@@ -210,7 +212,7 @@ app.layout = html.Div([
         html.P('© {} Scott Tomlins   |   website by Scott Tomlins'.format(pd.Timestamp.now().year)),
     ],
         className='footer')
-]
+],
 )
 
 

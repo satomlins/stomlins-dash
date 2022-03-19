@@ -74,6 +74,11 @@ body {
     border-radius: 5%;
 }
 
+.img_container {
+    flex: 1;
+    max-width: 14em;
+}
+
 .plot {
     position: relative;
     border-radius: 5%;
@@ -85,8 +90,11 @@ body {
     border-style: solid;
     background-color: #181818;
     margin: 3% 10% 2%;
-    padding: 1% 5%;
+    padding: 0.5% 5% 1%;
     position: relative;
+    width: 80%;
+    max-width: 80em;
+    align: center;
 }
 
 .footer {
@@ -668,17 +676,24 @@ there.
 
 
 @media screen and (max-width: 900px) {
+
     body {
         margin: 5% 2%;
     }
 
+    h1, h2, h2, h4, h5, h6 {
+        margin-top: 0;
+        margin-bottom: 0;
+        font-weight: 300;
+    }
+
     h1 {
-        font-size: 4em;
-        /*font-size: 400%;*/
+        /*font-size: 4em;*/
+        font-size: 10vw;
     }
 
     h2 {
-        font-size: 2em;
+        font-size: 4.2vw;
     }
 
     .row {
@@ -692,16 +707,17 @@ there.
         background-color: #181818;
         margin: 0 0 2em;
         padding: 2px;
+        /*max-width: 9000px;*/
+        width: 98%;
         /*position: relative;*/
     }
 
-    .img {
+    .img_container {
         position: relative;
         border-radius: 5%;
         margin: 0 20% 5%;
         max-width: 60%;
         max-height: 100%;
-        /*max-width: 20em;*/
     }
 
     .plot {
@@ -723,18 +739,18 @@ there.
 }
 
 
-@media screen and (max-width: 1440px) and (min-width: 900px) {
-    body {
-        margin: 2% 0;
-    }
+/*@media screen and (max-width: 1440px) and (min-width: 900px) {*/
+/*    body {*/
+/*        margin: 2% 0;*/
+/*    }*/
 
-    .main_container {
-        border-radius: 5px;
-        border-color: #404040;
-        border-style: solid;
-        background-color: #181818;
-        margin: 3% 5% 2%;
-        padding: 1% 5%;
-        position: relative;
-    }
-}
+/*    .main_container {*/
+/*        border-radius: 5px;*/
+/*        border-color: #404040;*/
+/*        border-style: solid;*/
+/*        background-color: #181818;*/
+/*        margin: 3% 5% 2%;*/
+/*        padding: 1% 5%;*/
+/*        position: relative;*/
+/*    }*/
+/*}*/
