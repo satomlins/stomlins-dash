@@ -8,18 +8,19 @@ import plotly.express as px
 
 icon_size = 20
 icon_style = {'margin': '0.1rem 0.4rem 0'}
+
 today = pd.today = pd.Timestamp.now()
 bd = pd.Timestamp('00:00:00 2000-04-08')
 agey = today.year - bd.year - ((today.month, today.day) < (bd.month, bd.day))
-aged = (today - pd.Timedelta('{}y'.format(agey)) - bd).days
+# aged = (today - pd.Timedelta('{}y'.format(agey)) - bd).days
 
-about_me = "Hi, I'm Scott, age {} years and {} days! This is my website." \
+about_me = "Hi, I'm Scott! I'm a {} year old Data Scientist based in Bristol" \
            " Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et" \
            " dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip" \
            " ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu" \
            " fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt" \
            " mollit anim id est laborum." \
-    .format(agey, aged)
+    .format(agey)
 
 df = pd.read_csv('assets/timeline.csv', parse_dates=['start', 'end'], dayfirst=True)
 df['end'] = df['end'].apply(
@@ -92,7 +93,8 @@ app.layout = html.Div([
                     html.Div([
                         html.Img(
                             src="assets/PP.jpeg",
-                            className='twelve columns img'
+                            className='twelve columns img',
+                            # style={'height': '20em', 'width': 'auto'}
                         ),
                     ], className='two columns',
                     ),
@@ -132,10 +134,12 @@ app.layout = html.Div([
                                 id="title",
                                 className="info_text"
                             ),
-                            html.Div(html.H6(
-                                'Hover/click on the plot for more information',
-                                className="info_text"
-                            ), id='info'),
+                            html.Div(
+                                # html.H6(
+                                #     'Hover/click on the plot for more information',
+                                #     className="info_text"
+                                # ),
+                                id='info'),
                             html.Div(
                                 [
                                     html.Ul(id="bullets",
@@ -184,16 +188,6 @@ app.layout = html.Div([
             ),
             dcc.Link(
                 DashIconify(
-                    icon="bi:medium",
-                    width=icon_size,
-                    height=icon_size,
-                    style=icon_style
-                ),
-                target='_blank',
-                href='https://stomlins.medium.com/',
-            ),
-            dcc.Link(
-                DashIconify(
                     icon="bi:github",
                     width=icon_size,
                     height=icon_size,
@@ -201,6 +195,16 @@ app.layout = html.Div([
                 ),
                 target='_blank',
                 href='https://github.com/satomlins/',
+            ),
+            dcc.Link(
+                DashIconify(
+                    icon="bi:medium",
+                    width=icon_size,
+                    height=icon_size,
+                    style=icon_style
+                ),
+                target='_blank',
+                href='https://stomlins.medium.com/',
             ),
         ]),
         html.P('© {} Scott Tomlins   |   website by Scott Tomlins'.format(pd.Timestamp.now().year)),
@@ -224,17 +228,10 @@ def update_info(hoverData, clickData):
     global prevClickData
     global newData
 
-    print('click', clickData)
-    print('hover', hoverData)
-
     if clickData == prevClickData:
         newData = hoverData
     else:
         newData = clickData
-
-    print('\n')
-    print('new ', newData)
-    print('\n')
 
     x = newData['points'][0]['x']
     x2 = newData['points'][0]['base']
@@ -247,13 +244,8 @@ def update_info(hoverData, clickData):
              & (df['type'] == y)]
 
     prevClickData = clickData
-    # prevHoverData = hoverData
 
-    print(row['info'])
-    print(row['info'].values[0].split('|'))
     linkInfo = row['info'].values[0].split('|')
-
-    print(linkInfo)
 
     if len(linkInfo) == 1:
         info = html.H6(
@@ -283,5 +275,4 @@ def update_info(hoverData, clickData):
 
 # Main
 if __name__ == '__main__':
-    # app.server.run(debug=True)
     app.run_server()  # debug=True, port=8069)

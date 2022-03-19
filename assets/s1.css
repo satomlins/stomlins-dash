@@ -674,6 +674,7 @@ there.
 
     h1 {
         font-size: 4em;
+        /*font-size: 400%;*/
     }
 
     h2 {
@@ -700,6 +701,7 @@ there.
         margin: 0 20% 5%;
         max-width: 60%;
         max-height: 100%;
+        /*max-width: 20em;*/
     }
 
     .plot {
