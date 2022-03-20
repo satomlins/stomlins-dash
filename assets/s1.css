@@ -89,12 +89,13 @@ body {
     border-color: #404040;
     border-style: solid;
     background-color: #181818;
-    margin: 3% 10% 2%;
+    margin: 1% auto 2%;
     padding: 0.5% 5% 1%;
     position: relative;
     width: 80%;
     max-width: 80em;
     align: center;
+    display: block;
 }
 
 .footer {
@@ -664,16 +665,7 @@ there.
     .offset-by-eleven.columns {
         margin-left: 95.3333333333%;
     }
-
-
 }
-
-/*@media screen and (max-width: 1600px) {*/
-/*    body {*/
-/*        margin: 0;*/
-/*    }*/
-/*}*/
-
 
 @media screen and (max-width: 900px) {
 
@@ -686,16 +678,13 @@ there.
     /*    margin-bottom: 0;*/
     /*    font-weight: 300;*/
     /*}*/
-
     /*h1 {*/
     /*    !*font-size: 4em;*!*/
     /*    font-size: 12vw;*/
     /*}*/
-
     /*h2 {*/
     /*    font-size: 5vw;*/
     /*}*/
-
     .row {
         flex-direction: column;
     }
@@ -739,7 +728,7 @@ there.
 }
 
 
-@media screen and (max-width: 700px){
+@media screen and (max-width: 700px) {
 
     h1 {
         /*font-size: 4em;*/
