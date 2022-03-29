@@ -1,0 +1,3 @@
+I'm Scott. At {}, I have {}+ years experience working at a global technology company and am on the verge of graduating from #LINK.
+
+Technically I've spent the past two years working as a Data Scientist, using data from Dyson's 4m+ connected machines to develop new features and enhance user experience. I'm proficient in Python and SQL, and have been exposed to big data and tools such as #LINK. To show off some of these skills, this website has been made using #LINK. Check out the source code #LINK.

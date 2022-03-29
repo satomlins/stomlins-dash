@@ -6,23 +6,43 @@ from dash.dependencies import Input, Output
 from dash_iconify import DashIconify
 import plotly.express as px
 
+
+def intersperse(lst, item):
+    result = [item] * (len(lst) * 2 - 1)
+    result[0::2] = lst
+    return result
+
+
 icon_size = 20
 icon_style = {'margin': '0.1rem 0.4rem 0'}
 
-today = pd.today = pd.Timestamp.now()
+today = pd.Timestamp.now()
 bd = pd.Timestamp('00:00:00 2000-04-08')
+career_start = pd.Timestamp('00:00:00 2018-09-01')
 agey = today.year - bd.year - ((today.month, today.day) < (bd.month, bd.day))
+careery = today.year - career_start.year - ((today.month, today.day) < (career_start.month, career_start.day))
 # aged = (today - pd.Timedelta('{}y'.format(agey)) - bd).days
 
-about_me = "Hi, I'm Scott! I'm a {} year old Data Scientist based in Bristol" \
-           " Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et" \
-           " dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip" \
-           " ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu" \
-           " fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt" \
-           " mollit anim id est laborum." \
-    .format(agey)
+about_me = [
+    "I'm Scott. At {}, I have {}+ years experience working at a global technology company and am on the verge of graduating from ".format(
+        agey, careery),
+    html.A(children='The Dyson Institute', href='https://www.dysoninstitute.com/', target='_blank'),
+    ".",
+    html.Br(),
+    html.Br(),
+    "Technically I've spent the past two years working as a Data Scientist, using data from Dyson's 4m+ connected machines to develop new features for our machines and enhance users' experiences globally. I'm proficient in Python and SQL, and have been exposed to big data and tools such as ",
+    html.A(children='Metaflow', href='https://metaflow.org/', target='_blank'),
+    '. To show off some of these skills, this website has been made using ',
+    html.A(children='Plotly Dash', href='https://dash.plotly.com/', target='_blank'),
+    ' - have a play around with my timeline below! Check out the source code ',
+    html.A(children='here', href='https://github.com/satomlins/stomlins-dash', target='_blank'),
+    '.']
 
-df = pd.read_csv('assets/timeline.csv', parse_dates=['start', 'end'], dayfirst=True)
+df1 = pd.read_csv('assets/timeline.csv', parse_dates=['start', 'end'], dayfirst=True)
+# df2 = pd.read_csv('assets/timeline_new.csv', parse_dates=['start', 'end'], dayfirst=True)
+
+df = df1.copy()
+
 df['end'] = df['end'].apply(
     lambda x: x if (x > pd.Timestamp('00:00:00 2000-01-01')) & (x < pd.Timestamp.now()) else pd.Timestamp.now())
 prevClickData = None
@@ -51,7 +71,7 @@ fig.update_layout(showlegend=False,
 app = dash.Dash(__name__,
                 meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1"}], )
 
-app.title = 'stomlins'
+app.title = 'Scott Tomlins'
 
 server = app.server
 
@@ -102,6 +122,19 @@ app.layout = html.Div([
                         #        'max-height': '100%', 'float': 'left'}
                     ),
                     html.Div([
+                        # html.P(['this is a test ',
+                        #         html.A('The Dyson Institute',
+                        #                target='_blank',
+                        #                href='https://www.dysoninstitute.com/'),
+                        #         '\n\n\n\n\nwow '],
+                        #        style={'font-size': '1.2em',
+                        #               'text-align': 'justify',
+                        #               'text-justify': 'inter-word',
+                        #               'top': '50%',
+                        #               'margin': '0 0 0 0',
+                        #               },
+                        #        className='twelve columns',
+                        #        )
                         html.P(
                             about_me,
                             style={'font-size': '1.2em',
