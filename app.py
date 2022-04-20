@@ -160,6 +160,12 @@ app.layout = html.Div([
                                 className="info_text"
                             ),
                             html.Div(
+                                # html.H6(
+                                #     'Hover/click on the plot for more information',
+                                #     className="info_text"
+                                # ),
+                                id='info'),
+                            html.Div(
                                 [
                                     html.Ul(id="bullets",
                                             style={'list-style-position': 'outside',
@@ -229,8 +235,8 @@ app.layout = html.Div([
 )
 
 
-def prettify_row(row):
-    return 0
+# def prettify_row(row):
+#     return 0
 
 
 @app.callback(Output('title', 'children'),
@@ -290,4 +296,4 @@ def update_info(hoverData, clickData):
 
 # Main
 if __name__ == '__main__':
-    app.run_server()  # debug=True, port=8069)
+    app.run_server(debug=True)  # , port=8069)
