@@ -30,9 +30,9 @@ about_me = [
     ".",
     html.Br(),
     html.Br(),
-    "Technically I've spent the past two years working as a Data Scientist, using data from Dyson's 4m+ connected machines to develop new features for our machines and enhance users' experiences globally. I'm proficient in Python and SQL, and have been exposed to big data and tools such as ",
+    "Technically I've spent the past two years working as a Data Scientist, using data from millions of connected machines globally to develop smart features and enhance users' experiences. I'm proficient in Python and SQL, and have experience working with big data using tools such as ",
     html.A(children='Metaflow', href='https://metaflow.org/', target='_blank'),
-    '. To show off some of these skills, this website has been made using ',
+    '. To exhibit some of these skills, this website has been made using ',
     html.A(children='Plotly Dash', href='https://dash.plotly.com/', target='_blank'),
     ' - have a play around with my timeline below! Check out the source code ',
     html.A(children='here', href='https://github.com/satomlins/stomlins-dash', target='_blank'),
@@ -55,7 +55,7 @@ fig = px.timeline(df,
                   template='plotly_dark',
                   labels={'type': ''},
                   height=400,
-                  title='Hover/click on the plot for more information'
+                  title='hover or click on the plot for more information'
                   )
 
 fig.update_traces(
@@ -108,7 +108,6 @@ app.layout = html.Div([
                 id="header",
                 className='row',
             ),
-
             html.Div(
                 [
                     html.Div([
@@ -122,19 +121,6 @@ app.layout = html.Div([
                         #        'max-height': '100%', 'float': 'left'}
                     ),
                     html.Div([
-                        # html.P(['this is a test ',
-                        #         html.A('The Dyson Institute',
-                        #                target='_blank',
-                        #                href='https://www.dysoninstitute.com/'),
-                        #         '\n\n\n\n\nwow '],
-                        #        style={'font-size': '1.2em',
-                        #               'text-align': 'justify',
-                        #               'text-justify': 'inter-word',
-                        #               'top': '50%',
-                        #               'margin': '0 0 0 0',
-                        #               },
-                        #        className='twelve columns',
-                        #        )
                         html.P(
                             about_me,
                             style={'font-size': '1.2em',
@@ -174,12 +160,6 @@ app.layout = html.Div([
                                 className="info_text"
                             ),
                             html.Div(
-                                # html.H6(
-                                #     'Hover/click on the plot for more information',
-                                #     className="info_text"
-                                # ),
-                                id='info'),
-                            html.Div(
                                 [
                                     html.Ul(id="bullets",
                                             style={'list-style-position': 'outside',
@@ -209,7 +189,7 @@ app.layout = html.Div([
                     style=icon_style
                 ),
                 target='_blank',
-                href='mailto:scott@stomlins.com',
+                href='mailto:scotttomlins1@gmail.com',
             ),
             dcc.Link(
                 DashIconify(
