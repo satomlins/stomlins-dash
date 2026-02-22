@@ -1,0 +1,19 @@
+[project]
+name = "stomlins-dash"
+version = "0.1.0"
+description = "Scott Tomlins personal website built with Plotly Dash"
+readme = "README.md"
+requires-python = ">=3.9,<3.11"
+dependencies = [
+    "dash==2.0.0",
+    "dash-iconify==0.1.0",
+    "flask==2.0.3",
+    "gunicorn==23.0.0",
+    "numpy<2",
+    "pandas==1.4.0",
+    "plotly==5.5.0",
+    "werkzeug==2.0.3",
+]
+
+[tool.uv]
+package = false

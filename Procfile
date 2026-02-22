@@ -1,2 +1,1 @@
-web: gunicorn app:server
-
+web: uv run gunicorn app:server
