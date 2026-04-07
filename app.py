@@ -1,299 +1,421 @@
-# Import required libraries
 import pandas as pd
 import dash
 from dash import dcc, html
 from dash.dependencies import Input, Output
-from dash_iconify import DashIconify
 import plotly.express as px
 
-
-def intersperse(lst, item):
-    result = [item] * (len(lst) * 2 - 1)
-    result[0::2] = lst
-    return result
+TODAY = pd.Timestamp.now()
 
 
-icon_size = 20
-icon_style = {'margin': '0.1rem 0.4rem 0'}
+def parse_source(raw_info):
+    info_text = "" if pd.isna(raw_info) else str(raw_info).strip()
+    if not info_text:
+        return "", ""
 
-today = pd.Timestamp.now()
-bd = pd.Timestamp('00:00:00 2000-04-08')
-career_start = pd.Timestamp('00:00:00 2018-09-01')
-agey = today.year - bd.year - ((today.month, today.day) < (bd.month, bd.day))
-careery = today.year - career_start.year - ((today.month, today.day) < (career_start.month, career_start.day))
-# aged = (today - pd.Timedelta('{}y'.format(agey)) - bd).days
+    parts = info_text.split("|", 1)
+    if len(parts) == 2:
+        return parts[0].strip(), parts[1].strip()
+    return parts[0].strip(), ""
 
-about_me = [
-    "I'm Scott. At {}, I have {}+ years experience working at a global technology company and am on the verge of graduating from ".format(
-        agey, careery),
-    html.A(children='The Dyson Institute', href='https://www.dysoninstitute.com/', target='_blank'),
-    ".",
-    html.Br(),
-    html.Br(),
-    "Technically I've spent the past two years working as a Data Scientist, using data from millions of connected machines globally to develop smart features and enhance users' experiences. I'm proficient in Python and SQL, and have experience working with big data using tools such as ",
-    html.A(children='Metaflow', href='https://metaflow.org/', target='_blank'),
-    '. To exhibit some of these skills, this website has been made using ',
-    html.A(children='Plotly Dash', href='https://dash.plotly.com/', target='_blank'),
-    ' - have a play around with my timeline below! Check out the source code ',
-    html.A(children='here', href='https://github.com/satomlins/stomlins-dash', target='_blank'),
-    '.']
 
-df1 = pd.read_csv('assets/timeline.csv', parse_dates=['start', 'end'], dayfirst=True)
-# df2 = pd.read_csv('assets/timeline_new.csv', parse_dates=['start', 'end'], dayfirst=True)
+def extract_bullets(row, limit=None):
+    bullets = []
+    for key in ["bullet_1", "bullet_2", "bullet_3", "bullet_4", "bullet_5"]:
+        value = row.get(key)
+        if pd.notna(value) and str(value).strip():
+            bullets.append(str(value).strip())
 
-df = df1.copy()
+    return bullets if limit is None else bullets[:limit]
 
-df['end'] = df['end'].apply(
-    lambda x: x if (x > pd.Timestamp('00:00:00 2000-01-01')) & (x < pd.Timestamp.now()) else pd.Timestamp.now())
-prevClickData = None
 
-fig = px.timeline(df,
-                  x_start="start",
-                  x_end="end",
-                  y="type",
-                  color='title',
-                  template='plotly_dark',
-                  labels={'type': ''},
-                  height=400,
-                  title='hover or click on the plot for more information'
-                  )
+def build_info_block(raw_info):
+    label, link = parse_source(raw_info)
+    if not label:
+        return html.P("No external reference for this entry.", className="inspector-info")
+    if link:
+        return html.A(
+            label,
+            href=link,
+            target="_blank",
+            rel="noopener noreferrer",
+            className="inline-link",
+        )
+    return html.P(label, className="inspector-info")
 
-fig.update_traces(
-    hovertemplate='%{y}',
+
+def event_status(row):
+    if row["start"] > TODAY:
+        return "future"
+    if pd.isna(row["end"]) or row["end"] >= TODAY:
+        return "present"
+    return "past"
+
+
+def display_end(row):
+    if pd.notna(row["end"]):
+        return row["end"]
+
+    if row["start"] > TODAY:
+        return row["start"] + pd.Timedelta(days=60)
+    return TODAY
+
+
+def row_from_point(point, table):
+    selected_title = point.get("customdata", [None])[0]
+    if selected_title:
+        by_title = table[table["title"] == selected_title]
+        if not by_title.empty:
+            return by_title.iloc[0]
+
+    y_track = point.get("y")
+    scoped = table[table["track_label"] == y_track]
+    if scoped.empty:
+        return None
+
+    x_val = pd.to_datetime(point.get("x")) if point.get("x") else None
+    base_val = pd.to_datetime(point.get("base")) if point.get("base") else None
+
+    if x_val is not None and base_val is not None:
+        scoped = scoped[
+            (scoped["start"] <= x_val)
+            & (scoped["display_end"] >= x_val)
+            & (scoped["start"] <= base_val)
+            & (scoped["display_end"] >= base_val)
+        ]
+
+    if scoped.empty:
+        return None
+    return scoped.iloc[0]
+
+
+def selected_work_cards(table):
+    priorities = [
+        "Dyson - Senior Data Analyst",
+        "Fantasy Six Nations Dashboard",
+        "Scott Tomlins Portfolio Dashboard (this site)",
+    ]
+    selected_rows = []
+    used_titles = set()
+
+    for title in priorities:
+        match = table[table["title"] == title]
+        if not match.empty:
+            row = match.sort_values("start", ascending=False).iloc[0]
+            selected_rows.append(row)
+            used_titles.add(row["title"])
+
+    if len(selected_rows) < 3:
+        fallback = table[table["type"].isin(["experience", "projects"])].sort_values("start", ascending=False)
+        for _, row in fallback.iterrows():
+            if row["title"] in used_titles:
+                continue
+            selected_rows.append(row)
+            used_titles.add(row["title"])
+            if len(selected_rows) >= 3:
+                break
+
+    cards = []
+    for row in selected_rows[:3]:
+        source_label, source_link = parse_source(row["info"])
+        bullets = extract_bullets(row, limit=2)
+        summary = bullets[0] if bullets else "Project summary available on request."
+        period_end = "Present" if pd.isna(row["end"]) or row["end"] >= TODAY else row["end"].strftime("%Y")
+        period_label = f"{row['start'].strftime('%Y')} - {period_end}"
+
+        link_node = None
+        if source_label and source_link:
+            link_node = html.A(
+                source_label,
+                href=source_link,
+                target="_blank",
+                rel="noopener noreferrer",
+                className="inline-link project-link",
+            )
+        elif source_label:
+            link_node = html.P(source_label, className="project-meta")
+
+        card_children = [
+            html.P(period_label, className="project-meta"),
+            html.H3(row["title"], className="project-title"),
+            html.P(summary, className="project-copy"),
+        ]
+
+        if link_node:
+            card_children.append(link_node)
+
+        cards.append(html.Article(className="project-item", children=card_children))
+
+    if not cards:
+        cards.append(
+            html.Article(
+                className="project-item",
+                children=[html.P("Selected work entries will appear here.", className="project-copy")],
+            )
+        )
+
+    return cards
+
+
+df = pd.read_csv("assets/timeline.csv", parse_dates=["start", "end"], dayfirst=True)
+df = df.sort_values(["start", "type", "title"]).reset_index(drop=True)
+df["status"] = df.apply(event_status, axis=1)
+df["display_end"] = df.apply(display_end, axis=1)
+df["track_label"] = df["type"].str.upper()
+
+track_order = [
+    track
+    for track in ["EXPERIENCE", "EDUCATION", "VOLUNTEERING", "PROJECTS"]
+    if track in set(df["track_label"].tolist())
+]
+if not track_order:
+    track_order = sorted(df["track_label"].dropna().unique().tolist())
+
+fig = px.timeline(
+    df,
+    x_start="start",
+    x_end="display_end",
+    y="track_label",
+    color="status",
+    custom_data=["title"],
+    category_orders={"track_label": track_order},
+    color_discrete_map={
+        "past": "#4f5d6b",
+        "present": "#45d9e7",
+        "future": "#7a8794",
+    },
+    height=530,
 )
 
-fig.update_layout(showlegend=False,
-                  yaxis={'type': 'category', 'visible': True, 'tickangle': -45},
-                  margin=dict(l=0, r=0, t=80, b=40),
-                  font_family='Montserrat, Roboto Mono'
-                  )
+fig.update_yaxes(autorange="reversed", title=None, showticklabels=False, showgrid=False)
+fig.update_xaxes(
+    title=None,
+    tickformat="%Y",
+    dtick="M12",
+    tickfont={"size": 11, "color": "#8f9ba8"},
+    showgrid=True,
+    gridcolor="#1f2730",
+    zeroline=False,
+)
+fig.update_traces(hovertemplate="<b>%{customdata[0]}</b><extra></extra>")
+fig.update_layout(
+    showlegend=False,
+    bargap=0.62,
+    margin={"l": 20, "r": 20, "t": 22, "b": 24},
+    paper_bgcolor="rgba(0,0,0,0)",
+    plot_bgcolor="rgba(0,0,0,0)",
+    font={"family": "Inter, sans-serif", "color": "#d8dde3"},
+)
 
-app = dash.Dash(__name__,
-                meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1"}], )
+for trace in fig.data:
+    if trace.name == "future":
+        trace.opacity = 0.45
 
-app.title = 'Scott Tomlins'
+for track in track_order:
+    fig.add_annotation(
+        x=df["start"].min(),
+        y=track,
+        text=track,
+        showarrow=False,
+        xanchor="left",
+        yanchor="bottom",
+        yshift=16,
+        font={"family": "IBM Plex Mono, monospace", "size": 10, "color": "#8f9ba8"},
+    )
 
+present_rows = df[df["status"] == "present"].sort_values("start", ascending=False)
+if not present_rows.empty:
+    default_row = present_rows.iloc[0]
+else:
+    default_row = df.sort_values("display_end", ascending=False).iloc[0]
+
+default_title = default_row["title"]
+default_info = build_info_block(default_row["info"])
+default_bullets = extract_bullets(default_row)
+
+if not default_bullets:
+    default_bullets = ["No additional highlights recorded for this entry."]
+
+app = dash.Dash(
+    __name__,
+    meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1"}],
+)
+app.title = "Scott Tomlins"
 server = app.server
 
-# Create app layout
-app.layout = html.Div([
-    html.Div(
-        [
-            html.Div(
-                [
-                    html.Div(
-                        [
-                            html.H1(
-                                'Scott Tomlins',
-                                style={
-                                    "textAlign": "center",
-                                    'margin': '0 0 0 0',
-                                    'color': '#00FFFF',
-                                },
-                                className='container'
-                            ),
-                            html.H2(
-                                'Data Scientist - Bristol UK',
-                                style={
-                                    "textAlign": "center",
-                                    'margin': '0 0 0 0',
-                                },
-                                className='container',
-                            )
-                        ],
-                        style={'margin': '2em 0 0'},
-                        className='twelve columns'
-                    ),
-                ],
-                id="header",
-                className='row',
-            ),
-            html.Div(
-                [
-                    html.Div([
-                        html.Img(
-                            src="assets/PP.jpeg",
-                            className='twelve columns img',
-                            # style={'height': '20em', 'width': 'auto'}
-                        ),
-                    ], className='container img_container',  # , className='two columns',
-                        # style={'display': 'inline-block', 'border-style': 'solid', 'position': 'static',
-                        #        'max-height': '100%', 'float': 'left'}
-                    ),
-                    html.Div([
+app.layout = html.Div(
+    className="page",
+    children=[
+        html.Main(
+            className="exhibit",
+            children=[
+                html.Section(
+                    className="chapter intro",
+                    children=[
+                        html.P("Personal Data Artefact", className="eyebrow"),
+                        html.H1("Scott Tomlins"),
+                        html.P("Senior Data Analyst | Bristol, UK", className="role"),
                         html.P(
-                            about_me,
-                            style={'font-size': '1.2em',
-                                   'text-align': 'justify',
-                                   'text-justify': 'inter-word',
-                                   'top': '50%',
-                                   'margin': '0 0 0 0',
-                                   },
-                            className='twelve columns',
-                        )
+                            [
+                                "Analytical problem-solver with a background in data, engineering, and product delivery. I specialise in reliable product telemetry, practical analytics, and decisions teams can trust.",
+                            ],
+                            className="lead",
+                        ),
+                        html.P(
+                            [
+                                "Find me on ",
+                                html.A(
+                                    "LinkedIn",
+                                    href="https://www.linkedin.com/in/scotttomlins/",
+                                    target="_blank",
+                                    rel="noopener noreferrer",
+                                    className="inline-link",
+                                ),
+                                ", ",
+                                html.A(
+                                    "Github",
+                                    href="https://github.com/satomlins/",
+                                    target="_blank",
+                                    rel="noopener noreferrer",
+                                    className="inline-link",
+                                ),
+                                ", ",
+                                html.A(
+                                    "Medium",
+                                    href="https://stomlins.medium.com/",
+                                    target="_blank",
+                                    rel="noopener noreferrer",
+                                    className="inline-link",
+                                ),
+                                ", or ",
+                                html.A(
+                                    "email me",
+                                    href="mailto:scott@stomlins.com",
+                                    target="_blank",
+                                    rel="noopener noreferrer",
+                                    className="inline-link",
+                                ),
+                                ".",
+                            ],
+                            className="contact-links",
+                        ),
                     ],
-                        className='container offset-by-half column',
-                        style={'flex': '1'},
-                        # style={'display': 'inline-block', 'border-style': 'solid'}
-                        # className='nineplus columns container offset-by-half column',
-                    )
-                ],
-                id="main_text",
-                className="row",
-                style={'margin': '2em 0 0'},
-            ),
-            html.Hr(),
-            html.Div(
-                [
-                    html.Div(
-                        [
-                            dcc.Graph(id='main_graph',
-                                      figure=fig,
-                                      )
-                        ],
-                        className='plot eight columns',
-                    ),
-                    html.Div(
-                        [
-                            html.H5(
-                                id="title",
-                                className="info_text"
-                            ),
-                            html.Div(
-                                # html.H6(
-                                #     'Hover/click on the plot for more information',
-                                #     className="info_text"
-                                # ),
-                                id='info'),
-                            html.Div(
-                                [
-                                    html.Ul(id="bullets",
-                                            style={'list-style-position': 'outside',
-                                                   'list-style-type': 'disc',
-                                                   'margin': '1em'}
-                                            )
-                                ],
-                                className="info_text"
-                            ),
-                        ],
-                        className='container four columns',
-                    ),
-                ],
-                className='row',
-            ),
-        ],
-        id="mainContainer",
-        className='main_container'
-    ),
-    html.Div([
-        html.Div([
-            dcc.Link(
-                DashIconify(
-                    icon="bi:envelope",
-                    width=icon_size,
-                    height=icon_size,
-                    style=icon_style
                 ),
-                target='_blank',
-                href='mailto:scotttomlins1@gmail.com',
-            ),
-            dcc.Link(
-                DashIconify(
-                    icon="bi:linkedin",
-                    width=icon_size,
-                    height=icon_size,
-                    style=icon_style
+                html.Section(
+                    className="chapter themes",
+                    children=[
+                        html.Div(
+                            className="chapter-head",
+                            children=[
+                                html.H2("What I Work On"),
+                                html.P(
+                                    "Themes drawn directly from recent work across Dyson Audio, transformation delivery, and connected product analytics.",
+                                    className="chapter-copy",
+                                ),
+                            ],
+                        ),
+                        html.Ul(
+                            className="focus-list",
+                            children=[
+                                html.Li(
+                                    "Product data reliability: trusted telemetry and semantic-layer metrics that align teams."
+                                ),
+                                html.Li(
+                                    "Decision-focused analytics: measuring feature outcomes and turning usage data into practical actions."
+                                ),
+                                html.Li(
+                                    "Cross-functional delivery: shipping outcomes across engineering, operations, and leadership contexts."
+                                ),
+                            ],
+                        ),
+                    ],
                 ),
-                target='_blank',
-                href='https://www.linkedin.com/in/scotttomlins/',
-            ),
-            dcc.Link(
-                DashIconify(
-                    icon="bi:github",
-                    width=icon_size,
-                    height=icon_size,
-                    style=icon_style
+                html.Section(
+                    className="chapter timeline-chapter",
+                    children=[
+                        html.Div(
+                            className="chapter-head",
+                            children=[
+                                html.H2("Timeline"),
+                                html.P(
+                                    "Curated chronology of education, product analytics roles, transformation delivery, volunteering, and writing.",
+                                    className="chapter-copy",
+                                ),
+                            ],
+                        ),
+                        html.Div(
+                            className="timeline-layout",
+                            children=[
+                                html.Div(
+                                    className="timeline-canvas",
+                                    children=[
+                                        dcc.Graph(
+                                            id="main_graph",
+                                            figure=fig,
+                                            config={"displayModeBar": False, "responsive": True},
+                                        )
+                                    ],
+                                ),
+                                html.Aside(
+                                    className="timeline-notes",
+                                    children=[
+                                        html.P("Current Focus", className="note-label"),
+                                        html.H3(id="title", className="inspector-title", children=default_title),
+                                        html.Div(id="info", children=default_info),
+                                        html.Ul(
+                                            id="bullets",
+                                            className="bullet-list",
+                                            children=[html.Li(text) for text in default_bullets],
+                                        ),
+                                    ],
+                                ),
+                            ],
+                        ),
+                    ],
                 ),
-                target='_blank',
-                href='https://github.com/satomlins/',
-            ),
-            dcc.Link(
-                DashIconify(
-                    icon="bi:medium",
-                    width=icon_size,
-                    height=icon_size,
-                    style=icon_style
+                html.Section(
+                    className="chapter selected-work",
+                    children=[
+                        html.Div(
+                            className="chapter-head",
+                            children=[
+                                html.H2("Projects"),
+                                html.P(
+                                    "A short set of completed projects and deliverables.",
+                                    className="chapter-copy",
+                                ),
+                            ],
+                        ),
+                        html.Div(className="project-list", children=selected_work_cards(df)),
+                    ],
                 ),
-                target='_blank',
-                href='https://stomlins.medium.com/',
-            ),
-        ]),
-        html.P('© {} Scott Tomlins   |   website by Scott Tomlins'.format(pd.Timestamp.now().year)),
+            ],
+        )
     ],
-        className='footer')
-],
 )
 
 
-# def prettify_row(row):
-#     return 0
+@app.callback(
+    Output("title", "children"),
+    Output("info", "children"),
+    Output("bullets", "children"),
+    Input("main_graph", "hoverData"),
+    Input("main_graph", "clickData"),
+)
+def update_info(hover_data, click_data):
+    payload = click_data or hover_data
+    if not payload or "points" not in payload or not payload["points"]:
+        return default_title, default_info, [html.Li(text) for text in default_bullets]
+
+    selected = row_from_point(payload["points"][0], df)
+    if selected is None:
+        return default_title, default_info, [html.Li(text) for text in default_bullets]
+
+    bullet_text = extract_bullets(selected)
+    if not bullet_text:
+        bullet_text = ["No additional highlights recorded for this entry."]
+
+    return selected["title"], build_info_block(selected["info"]), [html.Li(text) for text in bullet_text]
 
 
-@app.callback(Output('title', 'children'),
-              Output('info', 'children'),
-              Output('bullets', 'children'),
-              [Input('main_graph', 'hoverData'),
-               Input('main_graph', 'clickData')])
-def update_info(hoverData, clickData):
-    global df
-    global prevClickData
-    global newData
-
-    if clickData == prevClickData:
-        newData = hoverData
-    else:
-        newData = clickData
-
-    x = newData['points'][0]['x']
-    x2 = newData['points'][0]['base']
-    y = newData['points'][0]['y']
-
-    row = df[(df['start'] <= x)
-             & (df['end'] >= x)
-             & (df['start'] <= x2)
-             & (df['end'] >= x2)
-             & (df['type'] == y)]
-
-    prevClickData = clickData
-
-    linkInfo = row['info'].values[0].split('|')
-
-    if len(linkInfo) == 1:
-        info = html.H6(
-            row['info'],
-            className="info_text"
-        )
-    else:
-        info = dcc.Link(
-            html.H6(
-                linkInfo[0],
-                className="info_text"
-            ),
-            target='_blank',
-            href=linkInfo[1],
-        ),
-
-    print(info)
-
-    return row['title'], \
-           info, \
-           [html.Li(i) for i in (row['bullet_1'],
-                                 row['bullet_2'],
-                                 row['bullet_3'],
-                                 row['bullet_4'],
-                                 row['bullet_5']) if i.any()]
-
-
-# Main
-if __name__ == '__main__':
-    app.run_server(debug=True)  # , port=8069)
+if __name__ == "__main__":
+    app.run_server(debug=True)

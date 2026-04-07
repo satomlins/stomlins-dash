@@ -4,3 +4,6 @@ venv
 .DS_Store
 .env
 *.ipynb
+.claude/
+node_modules/
+dist/
