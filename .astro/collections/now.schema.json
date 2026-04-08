@@ -1,0 +1,38 @@
+{
+  "$ref": "#/definitions/now",
+  "definitions": {
+    "now": {
+      "type": "object",
+      "properties": {
+        "updated": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "errorMessage": {
+            "pattern": "ISO date required"
+          }
+        },
+        "focus": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "reading": {
+          "type": "string"
+        },
+        "listening": {
+          "type": "string"
+        },
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "updated",
+        "focus"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

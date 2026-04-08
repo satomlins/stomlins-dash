@@ -1,0 +1,129 @@
+{
+  "$ref": "#/definitions/cv",
+  "definitions": {
+    "cv": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "contact": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "format": "email"
+            },
+            "linkedin": {
+              "type": "string",
+              "format": "uri"
+            },
+            "github": {
+              "type": "string",
+              "format": "uri"
+            },
+            "medium": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "required": [
+            "email",
+            "linkedin",
+            "github",
+            "medium"
+          ],
+          "additionalProperties": false
+        },
+        "bio": {
+          "type": "string"
+        },
+        "experience": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "company": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "start": {
+                "type": "string"
+              },
+              "end": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "location": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "company",
+              "title",
+              "start",
+              "end",
+              "location"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "education": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "institution": {
+                "type": "string"
+              },
+              "qualification": {
+                "type": "string"
+              },
+              "field": {
+                "type": "string"
+              },
+              "start": {
+                "type": "string"
+              },
+              "end": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "institution",
+              "qualification",
+              "field",
+              "start",
+              "end"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "role",
+        "location",
+        "contact",
+        "bio",
+        "experience",
+        "education"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

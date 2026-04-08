@@ -1,0 +1,14 @@
+{
+  "name": "stomlins-dash",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && node scripts/validate.mjs",
+    "preview": "astro preview",
+    "deploy": "npm run build && rsync -avz --delete dist/ pi:~/stomlins.com/"
+  },
+  "dependencies": {
+    "@fontsource-variable/plus-jakarta-sans": "^5.2.8",
+    "astro": "^4.15.0"
+  }
+}

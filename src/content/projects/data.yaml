@@ -1,0 +1,18 @@
+projects:
+  - name: seasonal-spirals
+    url: /seasonal-spirals
+    description: Python library for turning daily time series into seasonal spiral charts.
+    tags: [Python, Open Source, PyPI, Plotly, Matplotlib]
+    year: 2026
+    pypi: https://pypi.org/project/seasonal-spirals/
+    github: https://github.com/satomlins/seasonal-spirals
+  - name: Fantasy Six Nations – Scoring Explorer
+    url: https://fantasy6n.stomlins.com
+    description: Live dashboard for exploring Fantasy Six Nations points data and planning transfers.
+    tags: [Python, Plotly, Dash, Live]
+    year: 2026
+  - name: Scraping Tweets by Location in Python
+    url: https://stomlins.medium.com/how-to-scrape-tweets-by-location-in-python-using-snscrape-8c870fa6ec25
+    description: Python tutorial with 24k+ views on Medium.
+    tags: [Python, Medium, Writing]
+    year: 2020

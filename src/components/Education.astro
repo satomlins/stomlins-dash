@@ -1,0 +1,52 @@
+---
+interface EducationEntry {
+  institution: string;
+  qualification: string;
+  field: string;
+  start: string;
+  end: string;
+}
+
+interface Props {
+  education: EducationEntry[];
+}
+
+const { education } = Astro.props;
+
+function formatYear(str: string): string {
+  return str.split('-')[0];
+}
+---
+
+<section aria-labelledby="education-heading">
+  <h2 id="education-heading">Education</h2>
+  <div class="edu-list">
+    {education.map(entry => (
+      <div class="edu-item">
+        <span class="institution">{entry.institution}</span>
+        <span class="field">{entry.qualification}, {entry.field}.</span>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .edu-list { display: flex; flex-direction: column; gap: var(--item-gap); }
+
+  .edu-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .institution {
+    font-size: 15px;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .field {
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+</style>

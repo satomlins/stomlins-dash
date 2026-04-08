@@ -1,0 +1,131 @@
+/* Design tokens */
+:root {
+  --bg: #0f1117;
+  --surface: #161b22;
+  --text: #e6edf3;
+  --text-muted: #8b949e;
+  --border: #21262d;
+  --accent: #58a6ff;
+
+  --max-width: 680px;
+  --padding-desktop: 40px;
+  --padding-mobile: 20px;
+  --section-gap: 56px;
+  --item-gap: 20px;
+  --bio-top: 20px;
+}
+
+/* Reset */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Plus Jakarta Sans', Aptos, system-ui, sans-serif;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 64px var(--padding-desktop) 80px;
+}
+
+/* Typography */
+h1 {
+  font-size: 36px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+p {
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.65;
+}
+
+/* Links */
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover { opacity: 0.8; }
+
+a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Section spacing */
+section {
+  margin-top: var(--section-gap);
+}
+
+/* Divider */
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin-bottom: var(--section-gap);
+}
+
+/* Project image */
+.project-img {
+  width: 100%;
+  max-width: 640px;
+  border-radius: 6px;
+  margin: 12px 0;
+  border: 1px solid var(--border);
+  display: block;
+}
+
+.project-links {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 4px 0;
+}
+
+.project-links a {
+  color: var(--text-muted);
+}
+
+.project-links a:hover {
+  color: var(--accent);
+  opacity: 1;
+}
+
+/* Print */
+@media print {
+  nav, footer a { display: none; }
+  body { background: white; color: black; }
+  a { color: black; text-decoration: none; }
+  section { page-break-inside: avoid; }
+}
+
+/* Mobile */
+@media (max-width: 639px) {
+  body {
+    padding: 40px var(--padding-mobile) 60px;
+  }
+
+  h1 { font-size: 28px; }
+
+  a, button, [role="button"] {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+}

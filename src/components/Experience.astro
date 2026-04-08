@@ -1,0 +1,96 @@
+---
+interface Role {
+  company: string;
+  title: string;
+  start: string;
+  end: string | null;
+  location: string;
+}
+
+interface Props {
+  experience: Role[];
+}
+
+const { experience } = Astro.props;
+
+function formatYear(str: string): string {
+  return str.split('-')[0];
+}
+
+function formatRange(start: string, end: string | null): string {
+  const s = formatYear(start);
+  const e = end ? formatYear(end) : 'present';
+  return s === e ? s : `${s} – ${e}`;
+}
+---
+
+<section aria-labelledby="experience-heading">
+  <h2 id="experience-heading">Experience</h2>
+  <div class="timeline">
+    {experience.map((role, i) => (
+      <div class={`entry${i === experience.length - 1 ? ' last' : ''}`}>
+        <div class="dot" />
+        <div class="content">
+          <span class="company">{role.company}</span>
+          <span class="meta">{role.location} · {formatRange(role.start, role.end)}</span>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .timeline {
+    position: relative;
+    padding-left: 24px;
+  }
+
+  /* Vertical line */
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .entry {
+    position: relative;
+    padding-bottom: var(--item-gap);
+  }
+
+  .entry.last {
+    padding-bottom: 0;
+  }
+
+  /* Circle */
+  .dot {
+    position: absolute;
+    left: -20px;
+    top: 6px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    border: 1.5px solid var(--accent);
+    background: var(--bg);
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .company {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .meta {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+</style>

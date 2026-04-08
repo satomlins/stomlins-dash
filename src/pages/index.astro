@@ -1,0 +1,62 @@
+---
+import Base from '../layouts/Base.astro';
+import Intro from '../components/Intro.astro';
+import Experience from '../components/Experience.astro';
+import Projects from '../components/Projects.astro';
+import Education from '../components/Education.astro';
+import { getEntry, getCollection } from 'astro:content';
+
+const cv = await getEntry('cv', 'data');
+const projectsEntry = await getEntry('projects', 'data');
+
+const { name, role, location, contact, bio, experience, education } = cv.data;
+const { projects } = projectsEntry.data;
+---
+
+<Base>
+  <main>
+    <Intro {name} {role} {location} {bio} {contact} />
+
+    <hr class="divider" style="margin-top: 40px;" />
+
+    <Experience {experience} />
+    <Education {education} />
+    <Projects {projects} />
+  </main>
+
+  <footer>
+    <p>
+      <a href="https://stomlins.com">stomlins.com</a>
+      <span class="sep"> · </span>
+      2026
+      <span class="sep"> · </span>
+      <a href="/now">/now</a>
+    </p>
+  </footer>
+</Base>
+
+<style>
+  main { display: flex; flex-direction: column; gap: 0; }
+
+  footer {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  footer p {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  footer a {
+    color: var(--text-muted);
+  }
+
+  footer a:hover {
+    color: var(--accent);
+    opacity: 1;
+  }
+
+  .sep { color: var(--border); }
+</style>

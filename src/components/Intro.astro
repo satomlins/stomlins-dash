@@ -1,0 +1,62 @@
+---
+interface Props {
+  name: string;
+  role: string;
+  location: string;
+  bio: string;
+  contact: {
+    email: string;
+    linkedin: string;
+    github: string;
+    medium: string;
+  };
+}
+
+const { name, role, location, bio, contact } = Astro.props;
+---
+
+<header>
+  <h1>{name}</h1>
+  <p class="role">{location}</p>
+  <p class="bio">{bio}</p>
+  <nav aria-label="contact">
+    <a href="https://linkedin.stomlins.com" target="_blank" rel="noopener noreferrer" class="link-secondary">LinkedIn</a>
+    <span class="sep">·</span>
+    <a href={contact.github} target="_blank" rel="noopener noreferrer" class="link-secondary">GitHub</a>
+    <span class="sep">·</span>
+    <a href={contact.medium} target="_blank" rel="noopener noreferrer" class="link-secondary">Medium</a>
+    <span class="sep">·</span>
+    <a href={`mailto:${contact.email}`} class="link-secondary">{contact.email}</a>
+  </nav>
+</header>
+
+<style>
+  header { margin-bottom: 0; }
+
+  .role {
+    font-size: 15px;
+    color: var(--text-muted);
+    margin-top: 6px;
+  }
+
+  .bio {
+    margin-top: var(--bio-top);
+    font-size: 16px;
+    line-height: 1.65;
+  }
+
+  nav {
+    margin-top: 16px;
+    font-size: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .sep { color: var(--text-muted); }
+
+  .link-primary { color: var(--text); }
+  .link-secondary { color: var(--text-muted); }
+  .link-primary:hover, .link-secondary:hover { color: var(--accent); opacity: 1; }
+</style>

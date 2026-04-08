@@ -1,0 +1,110 @@
+---
+import Base from '../layouts/Base.astro';
+import { getEntry } from 'astro:content';
+
+const now = await getEntry('now', 'data');
+const { updated, focus, reading, listening } = now.data;
+
+const updatedDate = new Date(updated);
+const monthYear = updatedDate.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+
+const diffDays = Math.round((Date.now() - updatedDate.getTime()) / (1000 * 60 * 60 * 24));
+const relativeTime = diffDays === 0
+  ? 'today'
+  : diffDays === 1
+  ? 'yesterday'
+  : diffDays < 30
+  ? `${diffDays} days ago`
+  : diffDays < 365
+  ? `${Math.round(diffDays / 30)} months ago`
+  : `${Math.round(diffDays / 365)} years ago`;
+---
+
+<Base
+  title="Now · Scott Tomlins"
+  description="What Scott Tomlins is doing right now."
+  url="https://stomlins.com/now"
+>
+  <main>
+    <a href="/" class="back">← stomlins.com</a>
+
+    <h1 style="margin-top: 32px;">/now</h1>
+    <p class="updated">Updated {relativeTime} · {monthYear}</p>
+
+    <section style="margin-top: 40px;">
+      <h2>Focus</h2>
+      <ul>
+        {focus.map(item => <li>{item}</li>)}
+      </ul>
+    </section>
+
+    {reading && (
+      <section>
+        <h2>Reading</h2>
+        <p>{reading}</p>
+      </section>
+    )}
+
+    {listening && (
+      <section>
+        <h2>Listening</h2>
+        <p>{listening}</p>
+      </section>
+    )}
+  </main>
+
+  <footer>
+    <p>
+      <a href="/">stomlins.com</a>
+      <span class="sep"> · </span>
+      <a href="/cv.json">cv.json</a>
+    </p>
+  </footer>
+</Base>
+
+<style>
+  .back {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .back:hover { color: var(--accent); opacity: 1; }
+
+  .updated {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 8px;
+  }
+
+  ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  li {
+    font-size: 15px;
+    color: var(--text);
+    padding-left: 16px;
+    position: relative;
+  }
+
+  li::before {
+    content: '–';
+    position: absolute;
+    left: 0;
+    color: var(--text-muted);
+  }
+
+  footer {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  footer p { font-size: 13px; color: var(--text-muted); }
+  footer a { color: var(--text-muted); }
+  footer a:hover { color: var(--accent); opacity: 1; }
+  .sep { color: var(--border); }
+</style>

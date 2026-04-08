@@ -1,0 +1,35 @@
+# newest-first ordering required — experience[0] is used for JSON-LD worksFor
+name: Scott Tomlins
+role: Senior Data Analyst
+location: Bristol, UK
+contact:
+  email: scott@stomlins.com
+  linkedin: https://linkedin.com/in/scotttomlins
+  github: https://github.com/satomlins
+  medium: https://stomlins.medium.com
+bio: >
+  I work at Dyson making sense of how millions of connected machines are being used in
+  people's homes. I'm a problem solver with a passion for data, with a focus on technology.
+  Outside of work I'm a keen skiier, chef, scuba and freediver, and rugby player.
+experience:
+  - company: Dyson
+    title: Senior Data Analyst
+    start: "2024-01"
+    end: null
+    location: UK
+  - company: Dyson
+    title: Strategy & Transformation Project Manager
+    start: "2023-01"
+    end: "2023-12"
+    location: Philippines
+  - company: Dyson
+    title: Undergraduate Engineer
+    start: "2018-09"
+    end: "2022-10"
+    location: UK
+education:
+  - institution: The Dyson Institute
+    qualification: BEng General Engineering
+    field: Degree from WMG, University of Warwick
+    start: "2018-09"
+    end: "2022-09"

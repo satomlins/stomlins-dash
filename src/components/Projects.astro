@@ -1,0 +1,94 @@
+---
+interface Project {
+  name: string;
+  url: string;
+  description: string;
+  tags: string[];
+  year: number;
+  image?: string;
+  pypi?: string;
+  github?: string;
+}
+
+interface Props {
+  projects: Project[];
+}
+
+const { projects } = Astro.props;
+---
+
+<section aria-labelledby="projects-heading">
+  <h2 id="projects-heading">Projects</h2>
+  <div class="project-list">
+    {projects.map(project => {
+      const isExternal = project.url.startsWith('http');
+      return (
+        <div class="project">
+          <a
+            href={project.url}
+            class="project-title"
+            {...isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {}}
+          >
+            {project.name} ↗
+          </a>
+
+          {project.image && (
+            <a
+              href={project.url}
+              {...isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {}}
+            >
+              <img
+                src={project.image}
+                alt={`${project.name} demo`}
+                class="project-img"
+                loading="lazy"
+                width="640"
+                height="400"
+              />
+            </a>
+          )}
+
+          <p class="description">{project.description}</p>
+
+          {(project.pypi || project.github) && (
+            <p class="project-links">
+              {project.pypi && (
+                <a href={project.pypi} target="_blank" rel="noopener noreferrer">PyPI</a>
+              )}
+              {project.pypi && project.github && ' · '}
+              {project.github && (
+                <a href={project.github} target="_blank" rel="noopener noreferrer">GitHub</a>
+              )}
+            </p>
+          )}
+
+          <p class="tags">{project.tags.join(' · ')}</p>
+        </div>
+      );
+    })}
+  </div>
+</section>
+
+<style>
+  .project-list { display: flex; flex-direction: column; gap: var(--item-gap); }
+
+  .project-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .description {
+    font-size: 15px;
+    color: var(--text);
+    margin: 4px 0;
+  }
+
+  .tags {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+</style>

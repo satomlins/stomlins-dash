@@ -1,0 +1,179 @@
+---
+import Base from '../layouts/Base.astro';
+import { existsSync } from 'fs';
+
+const chartsReady = existsSync('public/spirals/six-nations.html');
+
+const charts = [
+  {
+    src: '/spirals/github-commits.html',
+    title: 'GitHub commits',
+    caption: 'Daily GitHub commit activity by time of year.',
+  },
+  {
+    src: '/spirals/six-nations.html',
+    title: 'Six Nations Championship',
+    caption: 'Wikipedia pageviews for the Six Nations Championship. The tournament runs February to March — each ring is one year.',
+  },
+  {
+    src: '/spirals/skiing.html',
+    title: 'Skiing',
+    caption: 'Wikipedia pageviews for Skiing. The winter spike is the mirror image of Six Nations.',
+  },
+];
+---
+
+<Base
+  title="seasonal-spirals · Scott Tomlins"
+  description="Python library for turning daily time series into seasonal spiral charts."
+  url="https://stomlins.com/seasonal-spirals"
+>
+  <main>
+    <a href="/" class="back">← stomlins.com</a>
+
+    <h1 style="margin-top: 32px;">seasonal-spirals</h1>
+    <p class="subtitle">A Python library for seasonal data visualisation.</p>
+
+    <div class="install">
+      <code>uv add seasonal-spirals</code>
+    </div>
+
+    <div class="links">
+      <a href="https://github.com/satomlins/seasonal-spirals" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      <span class="sep"> · </span>
+      <a href="https://pypi.org/project/seasonal-spirals/" target="_blank" rel="noopener noreferrer">PyPI ↗</a>
+    </div>
+
+    <p class="description">
+      Each ring is one year of data. Angle represents time of year. Colour represents the value.
+      Seasonal patterns become immediately visible across multiple years.
+    </p>
+
+    {chartsReady ? (
+      <div class="charts">
+        {charts.map(chart => (
+          <div class="chart-block">
+            <iframe
+              src={chart.src}
+              title={chart.title}
+              width="100%"
+              height="560"
+              scrolling="no"
+              loading="lazy"
+              class="spiral-iframe"
+            />
+            <p class="caption">{chart.caption}</p>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <div class="placeholder">
+        <p>Charts not yet generated.</p>
+        <code>uv run python scripts/generate_spirals.py</code>
+      </div>
+    )}
+  </main>
+
+  <footer>
+    <p>
+      <a href="/">stomlins.com</a>
+      <span class="sep"> · </span>
+      <a href="/now">/now</a>
+    </p>
+  </footer>
+</Base>
+
+<style>
+  .back { font-size: 13px; color: var(--text-muted); }
+  .back:hover { color: var(--accent); opacity: 1; }
+
+  .subtitle {
+    font-size: 16px;
+    color: var(--text-muted);
+    margin-top: 8px;
+  }
+
+  .install {
+    margin-top: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 16px;
+    display: inline-block;
+  }
+
+  code {
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 14px;
+    color: var(--accent);
+  }
+
+  .links {
+    margin-top: 20px;
+    font-size: 15px;
+  }
+
+  .description {
+    margin-top: 28px;
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--text-muted);
+    max-width: 560px;
+  }
+
+  .charts {
+    margin-top: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+  }
+
+  .spiral-iframe {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: block;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .caption {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 10px;
+  }
+
+  .placeholder {
+    margin-top: 40px;
+    border: 1px dashed var(--border);
+    border-radius: 6px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .placeholder p { font-size: 14px; color: var(--text-muted); }
+
+  footer {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  footer p { font-size: 13px; color: var(--text-muted); }
+  footer a { color: var(--text-muted); }
+  footer a:hover { color: var(--accent); opacity: 1; }
+  .sep { color: var(--text-muted); }
+</style>
+
+<script>
+  document.querySelectorAll('.spiral-iframe').forEach(iframe => {
+    iframe.addEventListener('load', () => {
+      try {
+        const h = iframe.contentDocument.documentElement.scrollHeight;
+        if (h > 0) iframe.style.height = h + 'px';
+      } catch (_) {}
+    });
+  });
+</script>
