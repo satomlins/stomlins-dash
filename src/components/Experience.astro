@@ -32,7 +32,7 @@ function formatRange(start: string, end: string | null): string {
         <div class="dot" />
         <div class="content">
           <span class="company">{role.company}</span>
-          <span class="meta">{role.location} · {formatRange(role.start, role.end)}</span>
+          <span class="meta">{formatRange(role.start, role.end)} · {role.location}</span>
         </div>
       </div>
     ))}
@@ -68,7 +68,7 @@ function formatRange(start: string, end: string | null): string {
   /* Circle */
   .dot {
     position: absolute;
-    left: -20px;
+    left: -23px;
     top: 6px;
     width: 9px;
     height: 9px;

@@ -17,11 +17,17 @@ const { projects } = projectsEntry.data;
   <main>
     <Intro {name} {role} {location} {bio} {contact} />
 
-    <hr class="divider" style="margin-top: 40px;" />
+    <hr class="divider" />
+
+    <Projects {projects} />
+
+    <hr class="divider" />
 
     <Experience {experience} />
+
+    <hr class="divider" />
+
     <Education {education} />
-    <Projects {projects} />
   </main>
 
   <footer>

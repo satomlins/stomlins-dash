@@ -62,7 +62,6 @@ const { projects } = Astro.props;
             </p>
           )}
 
-          <p class="tags">{project.tags.join(' · ')}</p>
         </div>
       );
     })}
@@ -86,9 +85,4 @@ const { projects } = Astro.props;
     margin: 4px 0;
   }
 
-  .tags {
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-top: 4px;
-  }
 </style>

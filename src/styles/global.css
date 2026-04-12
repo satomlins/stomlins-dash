@@ -79,7 +79,12 @@ section {
 .divider {
   border: none;
   border-top: 1px solid var(--border);
-  margin-bottom: var(--section-gap);
+  margin: var(--section-gap) 0;
+}
+
+/* Remove section top margin when preceded by a divider */
+.divider + section {
+  margin-top: 0;
 }
 
 /* Project image */
