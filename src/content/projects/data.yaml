@@ -13,6 +13,6 @@ projects:
     year: 2026
   - name: Scraping Tweets by Location in Python
     url: https://stomlins.medium.com/how-to-scrape-tweets-by-location-in-python-using-snscrape-8c870fa6ec25
-    description: Python tutorial with 24k+ views on Medium.
+    description: Medium article with 24k+ views.
     tags: [Python, Medium, Writing]
     year: 2020

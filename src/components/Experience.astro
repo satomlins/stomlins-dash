@@ -32,7 +32,8 @@ function formatRange(start: string, end: string | null): string {
         <div class="dot" />
         <div class="content">
           <span class="company">{role.company}</span>
-          <span class="meta">{formatRange(role.start, role.end)} · {role.location}</span>
+          <span class="meta">{role.location}</span>
+          <span class="meta">{formatRange(role.start, role.end)}</span>
         </div>
       </div>
     ))}
